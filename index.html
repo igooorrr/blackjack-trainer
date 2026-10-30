@@ -2,232 +2,522 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Тренажёр подсчёта карт Hi-Lo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Hi-Lo — тренажёр подсчёта карт</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hi-Lo">
-<meta name="theme-color" content="#0c3527">
+<meta name="theme-color" content="#06120d">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--felt:#0c3527;--felt2:#155c43;--gold:#e8c46a;--txt:#f3efe3;--muted:#a3bdb0;--red:#c8323c;--ok:#4cd187;--bad:#ff6b6b}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%}
-body{background:radial-gradient(ellipse at 50% 15%,var(--felt2),var(--felt) 70%) fixed;color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);touch-action:manipulation}
-button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
-.wrap{max-width:560px;margin:0 auto;padding:14px 16px 24px;min-height:100vh;display:flex;flex-direction:column}
-h1{font-size:22px;margin:6px 0 2px}
-.sub{color:var(--muted);font-size:14px;margin:0 0 14px}
-.tabs{display:flex;gap:6px;background:rgba(0,0,0,.28);padding:4px;border-radius:12px;margin-bottom:14px}
-.tab{flex:1;background:transparent;padding:10px 6px;border-radius:9px;color:var(--muted);font-weight:600;font-size:15px}
-.tab.on{background:var(--gold);color:#1b1b1b}
-.box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:13px;margin-bottom:11px}
-.lbl{font-size:12px;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.7px}
-.seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button{background:rgba(255,255,255,.08);padding:9px 10px;border-radius:9px;font-size:15px;flex:1 0 auto}
-.seg button.on{background:var(--txt);color:#123;font-weight:600}
-.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
-.toggle small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
-.sw{width:50px;height:30px;border-radius:15px;background:rgba(255,255,255,.18);position:relative;flex:none;transition:.2s}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
-.sw.on{background:var(--ok)}.sw.on::after{left:23px}
-.big-btn{background:var(--gold);color:#1b1b1b;font-weight:700;font-size:18px;padding:15px;border-radius:14px;width:100%}
-.ghost{background:rgba(255,255,255,.1);padding:11px 14px;border-radius:12px;font-weight:600}
-.cheat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;font-size:13px}
-.cheat div{background:rgba(0,0,0,.25);border-radius:9px;padding:8px 4px;color:var(--muted)}
-.cheat b{display:block;font-size:20px;color:var(--txt)}
-.stat-line{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+:root{
+  --bg:#06120d;--s1:#0d1f17;--s2:#13291f;--s3:#1a3628;--line:rgba(255,255,255,.07);
+  --txt:#f5f1e6;--muted:#8ea596;--dim:#5f7669;
+  --gold:#f0c75e;--gold2:#c9962f;--green:#3ddc84;--red:#ff5d62;--blue:#5aa9ff;
+  --felt1:#17694a;--felt2:#0b3a28;
+  --r:20px;--safe-b:env(safe-area-inset-bottom);--safe-t:env(safe-area-inset-top);
+  --font:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0}
+html,body{background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{min-height:100vh;touch-action:manipulation}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
 .hidden{display:none!important}
+.num{font-variant-numeric:tabular-nums}
 
-/* play */
-#play:not(.hidden){flex:1;display:flex;flex-direction:column}
-.bar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.bar .info{flex:1;font-variant-numeric:tabular-nums;font-size:15px;color:var(--muted)}
-.bar .info b{color:var(--txt)}
-.prog{height:4px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;margin-bottom:8px}
-.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
-.table{flex:1;min-height:52vh;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;user-select:none;-webkit-user-select:none;border-radius:18px}
-.table.manual{cursor:pointer}
-.hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;color:var(--muted);font-size:13px}
-.cd{font-size:90px;font-weight:800;color:var(--gold)}
-.pc{--w:150px;width:var(--w);aspect-ratio:5/7;background:#fdfdfb;border-radius:calc(var(--w)*.08);color:#151515;position:relative;box-shadow:0 6px 18px rgba(0,0,0,.35);font-weight:700;animation:flip .16s ease-out}
-.pc.r{color:var(--red)}
-.pc .c{position:absolute;top:6%;left:8%;font-size:calc(var(--w)*.2);line-height:.95;text-align:center}
-.pc .c2{top:auto;left:auto;bottom:6%;right:8%;transform:rotate(180deg)}
-.pc .m{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--w)*.46)}
-@keyframes flip{from{transform:rotateY(70deg) scale(.92);opacity:.3}to{transform:none;opacity:1}}
-.vbtns{display:flex;gap:10px;margin-top:10px;padding-bottom:6px}
-.vbtns button{flex:1;padding:20px 0;border-radius:16px;font-size:26px;font-weight:800;background:rgba(255,255,255,.1)}
-.vbtns button:active{transform:scale(.96)}
-.vbtns .m1{background:rgba(255,107,107,.18);color:#ffb3b3}
-.vbtns .p1{background:rgba(76,209,135,.18);color:#a6f0c6}
-.pc.good{box-shadow:0 0 0 4px var(--ok),0 6px 18px rgba(0,0,0,.35)}
-.pc.wrong{box-shadow:0 0 0 4px var(--bad),0 6px 18px rgba(0,0,0,.35)}
-.pc .badge{position:absolute;top:-14px;right:-14px;background:var(--bad);color:#fff;border-radius:20px;padding:4px 10px;font-size:18px}
-.paused{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;border-radius:18px;font-size:20px;font-weight:600}
+/* ---------- layout ---------- */
+.view{max-width:560px;margin:0 auto;padding:calc(var(--safe-t) + 18px) 18px calc(var(--safe-b) + 108px);animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold)}
+.title{font-size:34px;font-weight:800;letter-spacing:-.8px;margin:4px 0 6px;line-height:1.05}
+.lead{color:var(--muted);font-size:15px;line-height:1.45;margin-bottom:20px}
+.section-h{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.4px;margin:22px 4px 10px;text-transform:uppercase}
 
-/* overlay + keypad */
-.ov{position:fixed;inset:0;background:rgba(5,20,14,.82);display:flex;align-items:flex-end;justify-content:center;z-index:10;backdrop-filter:blur(3px)}
-.ov-in{width:100%;max-width:460px;background:#123e2f;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1)}
-@media(min-height:700px) and (min-width:600px){.ov{align-items:center}.ov-in{border-radius:20px}}
-.ov h2{margin:0 0 4px;font-size:19px;text-align:center}
-.ov p{margin:0 0 10px;text-align:center;color:var(--muted);font-size:14px}
-.kp-disp{font-size:46px;font-weight:800;text-align:center;padding:6px;margin-bottom:10px;background:rgba(0,0,0,.25);border-radius:12px;font-variant-numeric:tabular-nums;min-height:70px}
-.kp-disp.empty{color:rgba(255,255,255,.25)}
-.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.kp-grid button{background:rgba(255,255,255,.1);font-size:24px;font-weight:600;padding:13px 0;border-radius:12px}
-.kp-grid button:active{background:rgba(255,255,255,.25)}
+.card{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card+.card{margin-top:10px}
+.group{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.row+.row{border-top:1px solid var(--line)}
+.row .t{flex:1;font-weight:600;font-size:15px}
+.row .t small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:2px}
+.row.col{flex-direction:column;align-items:stretch;gap:10px}
+.row .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;font-size:17px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:radial-gradient(120% 140% at 100% 0%,#1f7a55 0%,#0f3f2c 45%,#0a2419 100%);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 40px -20px rgba(0,0,0,.7)}
+.hero::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");pointer-events:none;mix-blend-mode:overlay}
+.hero-cards{position:absolute;right:-6px;top:14px;width:120px;height:120px;pointer-events:none}
+.hero-cards .mini{position:absolute;width:62px;height:86px;border-radius:9px;background:#fbfaf6;box-shadow:0 8px 20px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-weight:800;font-size:26px;color:#141414}
+.hero-cards .mini.r{color:#c9302f}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;position:relative;z-index:1}
+.stat{background:rgba(0,0,0,.22);border-radius:14px;padding:10px 12px;backdrop-filter:blur(4px)}
+.stat b{display:block;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;color:rgba(255,255,255,.6);font-weight:600}
+.hero h2{font-size:22px;font-weight:800;letter-spacing:-.4px;position:relative;z-index:1;max-width:70%}
+.hero p{color:rgba(255,255,255,.7);font-size:14px;margin-top:4px;position:relative;z-index:1;max-width:66%;line-height:1.4}
+
+/* segmented */
+.seg{display:flex;background:rgba(0,0,0,.35);border-radius:12px;padding:3px;gap:2px}
+.seg button{flex:1;padding:9px 4px;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);transition:.18s;white-space:nowrap}
+.seg button.on{background:var(--s3);color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.sw{width:51px;height:31px;border-radius:16px;background:rgba(255,255,255,.14);position:relative;flex:none;transition:.22s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;transition:.22s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.sw.on{background:var(--green)}.sw.on::after{left:22px}
+
+.cta{width:100%;margin-top:18px;padding:18px;border-radius:18px;font-size:17px;font-weight:800;color:#2a1d02;background:linear-gradient(180deg,#ffdc7a,var(--gold) 45%,var(--gold2));box-shadow:0 10px 26px -8px rgba(240,199,94,.55),inset 0 1px 0 rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s}
+.cta:active{transform:scale(.98)}
+.btn2{padding:16px;border-radius:16px;font-weight:700;background:var(--s2);border:1px solid var(--line);width:100%}
+
+/* ---------- tab bar ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:8px 10px calc(var(--safe-b) + 8px);background:rgba(8,20,15,.78);backdrop-filter:saturate(1.6) blur(20px);-webkit-backdrop-filter:saturate(1.6) blur(20px);border-top:1px solid var(--line)}
+.tabbar .in{max-width:560px;margin:0 auto;display:flex}
+.tb{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--dim);font-size:10.5px;font-weight:700;transition:color .2s}
+.tb svg{width:26px;height:26px;transition:transform .2s}
+.tb.on{color:var(--gold)}
+.tb.on svg{transform:translateY(-1px) scale(1.06)}
+
+/* ---------- play ---------- */
+.screen{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;background:radial-gradient(130% 90% at 50% 20%,var(--felt1) 0%,var(--felt2) 55%,#06180f 100%);padding:calc(var(--safe-t) + 10px) 16px calc(var(--safe-b) + 14px)}
+.screen::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");pointer-events:none}
+.screen>*{position:relative;max-width:560px;width:100%;margin-left:auto;margin-right:auto}
+.ptop{display:flex;align-items:center;gap:10px}
+.pill{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;font-weight:700;font-size:14px;backdrop-filter:blur(6px)}
+.iconbtn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08)}
+.iconbtn svg{width:20px;height:20px}
+.live{margin-left:auto;font-size:15px;font-weight:800;padding:9px 14px}
+.live.pos{color:#8ff0b8}.live.neg{color:#ffb0b2}
+.prog{height:3px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .2s}
+.table{flex:1;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;position:relative;user-select:none;-webkit-user-select:none}
+.arc{position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);width:100%;height:auto;pointer-events:none;opacity:.22}
+.cd{font-family:"Playfair Display",serif;font-size:110px;font-weight:800;color:var(--gold);text-shadow:0 8px 30px rgba(0,0,0,.4);animation:pop .5s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:none;opacity:1}}
+.hint{position:absolute;bottom:4px;left:0;right:0;text-align:center;color:rgba(255,255,255,.55);font-size:13px;font-weight:600}
+.pausedov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(3,14,9,.7);border-radius:24px;backdrop-filter:blur(6px);font-weight:700;font-size:18px;z-index:3}
+
+/* playing card */
+.pc{--w:160px;width:var(--w);aspect-ratio:5/7;border-radius:calc(var(--w)*.075);position:relative;color:#151515;
+  background:linear-gradient(160deg,#ffffff,#f3f0e8);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 18px 30px -10px rgba(0,0,0,.6),0 3px 8px rgba(0,0,0,.25);
+  animation:deal .2s cubic-bezier(.2,.9,.3,1.2)}
+.pc.r{color:#c62f34}
+@keyframes deal{from{transform:translateY(-26px) rotate(-4deg) scale(.94);opacity:0}to{transform:none;opacity:1}}
+.pc .ix{position:absolute;top:5%;left:7%;display:flex;flex-direction:column;align-items:center;line-height:.9;font-weight:800;font-size:calc(var(--w)*.17);letter-spacing:-1px}
+.pc .ix i{font-style:normal;font-size:.78em;margin-top:2px}
+.pc .ix.b{top:auto;left:auto;bottom:5%;right:7%;transform:rotate(180deg)}
+.pc .ctr{position:absolute;inset:22% 18%;display:flex;align-items:center;justify-content:center;font-size:calc(var(--w)*.42)}
+.pc .face{position:absolute;inset:16% 17%;border:1.5px solid currentColor;border-radius:calc(var(--w)*.04);opacity:.9;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-size:calc(var(--w)*.36);line-height:1}
+.pc .face i{font-style:normal;font-family:var(--font);font-size:.5em;margin-top:2px}
+.pc.good{box-shadow:0 0 0 4px var(--green),0 18px 30px -10px rgba(0,0,0,.6)}
+.pc.wrong{box-shadow:0 0 0 4px var(--red),0 18px 30px -10px rgba(0,0,0,.6);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pc .badge{position:absolute;top:-14px;right:-14px;background:var(--red);color:#fff;border-radius:99px;padding:5px 11px;font-size:18px;font-weight:800;box-shadow:0 6px 14px rgba(0,0,0,.4)}
+
+.vbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.vb{padding:22px 0;border-radius:20px;font-size:28px;font-weight:800;border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(8px);transition:transform .08s;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 20px -10px rgba(0,0,0,.6)}
+.vb:active{transform:scale(.95)}
+.vb.m{background:linear-gradient(180deg,rgba(255,93,98,.32),rgba(255,93,98,.16));color:#ffd0d1}
+.vb.z{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07))}
+.vb.p{background:linear-gradient(180deg,rgba(61,220,132,.32),rgba(61,220,132,.14));color:#c9f8dc}
+
+/* ---------- sheet / keypad ---------- */
+.ov{position:fixed;inset:0;z-index:60;background:rgba(2,8,5,.6);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+.sheet{width:100%;max-width:480px;background:linear-gradient(180deg,#163224,#0d1f17);border-radius:28px 28px 0 0;padding:10px 18px calc(var(--safe-b) + 18px);border-top:1px solid rgba(255,255,255,.1);animation:up .28s cubic-bezier(.2,.9,.3,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);margin:0 auto 14px}
+.sheet h3{font-size:22px;font-weight:800;text-align:center}
+.sheet p{color:var(--muted);text-align:center;font-size:14px;margin:4px 0 14px}
+.kp-disp{font-size:52px;font-weight:800;text-align:center;padding:8px;margin-bottom:12px;background:rgba(0,0,0,.3);border-radius:18px;font-variant-numeric:tabular-nums;min-height:80px;border:1px solid var(--line)}
+.kp-disp.empty{color:rgba(255,255,255,.2)}
+.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.kp-grid button{background:rgba(255,255,255,.07);font-size:26px;font-weight:700;padding:14px 0;border-radius:16px;border:1px solid rgba(255,255,255,.05)}
+.kp-grid button:active{background:rgba(255,255,255,.2)}
 .kp-grid .sign{color:var(--gold)}
-.fb{font-size:20px;font-weight:700;text-align:center;padding:14px 0}
-.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.kp-ok{margin-top:0}
+.fb{font-size:22px;font-weight:800;text-align:center;padding:22px 0}
+.fb.ok{color:var(--green)}.fb.bad{color:var(--red)}
 
 /* result */
-.res-top{text-align:center;padding:10px 0 6px}
-.res-top .ic{font-size:60px;line-height:1}
-.res-top h2{margin:6px 0 2px;font-size:24px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kv{background:rgba(0,0,0,.25);border-radius:11px;padding:10px}
-.kv span{display:block;color:var(--muted);font-size:12px}
-.kv b{font-size:20px;font-variant-numeric:tabular-nums}
-.list{font-size:14px;line-height:1.6;color:var(--muted)}
-.list .ok{color:var(--ok)}.list .bad{color:var(--bad)}
-.row{display:flex;gap:8px;margin-top:6px}
-.row>*{flex:1}
+.res{overflow-y:auto}
+.ring{width:150px;height:150px;margin:10px auto 4px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .v b{font-size:32px;font-weight:800;line-height:1}
+.ring .v span{font-size:12px;color:var(--muted);font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:.8px}
+.res h2{text-align:center;font-size:26px;font-weight:800;letter-spacing:-.4px}
+.res .sub{text-align:center;color:rgba(255,255,255,.7);font-size:15px;margin:6px auto 18px;max-width:330px;line-height:1.4}
+.kvs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kv{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px 14px}
+.kv span{display:block;color:rgba(255,255,255,.55);font-size:12px;font-weight:600}
+.kv b{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.note{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px 14px;margin-top:8px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.75)}
+.note b{color:var(--txt)}
+.note .ok{color:var(--green)}.note .bad{color:var(--red)}
+.res-actions{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:16px}
+.res-actions .cta{margin:0}
 
-/* true count */
-.tc-wrap{display:flex;gap:14px;align-items:stretch}
-.tc-left{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
-.rc-big{font-size:54px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-.tray{width:74px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
-.tray-box{width:64px;height:170px;border:2px solid rgba(255,255,255,.35);border-top:0;border-radius:0 0 8px 8px;position:relative;background:rgba(0,0,0,.25);overflow:hidden}
-.tray-fill{position:absolute;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,#e9e3d3 0 2px,#bfb7a2 2px 3px);transition:height .3s}
-.tray-mark{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.35)}
-.tray small{color:var(--muted);font-size:11px;text-align:center}
-.streak{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:6px}
-.explain{font-size:15px;line-height:1.5;text-align:center;min-height:46px;margin:4px 0 8px}
+/* TC drill */
+.tc-card{display:flex;gap:16px;align-items:stretch}
+.tc-l{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.tc-l label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.rc-big{font-size:58px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.dk{font-size:30px;font-weight:800}
+.tray{width:78px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tray-box{width:66px;height:180px;border:2px solid rgba(255,255,255,.25);border-top:0;border-radius:0 0 12px 12px;position:relative;background:rgba(0,0,0,.3);overflow:hidden}
+.tray-fill{position:absolute;left:3px;right:3px;bottom:3px;border-radius:0 0 8px 8px;background:repeating-linear-gradient(0deg,#f2ecdc 0 2px,#c4b99d 2px 3px);transition:height .4s cubic-bezier(.2,.9,.3,1)}
+.tray-mark{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.25)}
+.tray small{color:var(--muted);font-size:11px;text-align:center;font-weight:600;line-height:1.3}
+.explain{min-height:58px;text-align:center;font-size:15px;line-height:1.5;margin:14px 0 10px;font-weight:600}
+.explain .muted{color:var(--muted);font-weight:500}
+.chipsrow{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-size:13px;font-weight:600}
+
+/* strategy */
+.felt{position:relative;border-radius:26px;padding:12px 14px 14px;background:radial-gradient(120% 90% at 50% 0%,var(--felt1),var(--felt2) 70%);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 20px 40px -24px rgba(0,0,0,.8);overflow:hidden;cursor:pointer}
+.felt .lb{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.55);text-align:center}
+.felt .hand{display:flex;justify-content:center;gap:8px;margin:8px 0 6px;min-height:calc(min(20vw,86px)*1.4)}
+.felt .hand .pc{--w:min(20vw,86px)}
+.felt .tot{text-align:center;font-weight:800;font-size:15px;color:#f5f1e6}
+.felt .tot span{color:var(--gold)}
+.felt .mid{height:1px;background:rgba(255,255,255,.1);margin:8px 10px}
+.pc.back{background:repeating-linear-gradient(45deg,#8e1d24 0 6px,#a8272f 6px 12px);border:4px solid #fbfaf6}
+.pc.back::after{content:"";position:absolute;inset:6px;border:1.5px solid rgba(255,255,255,.35);border-radius:6px}
+.tcchip{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.4);border:1px solid rgba(240,199,94,.4);color:var(--gold);border-radius:99px;padding:6px 12px;font-weight:800;font-size:13px}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.act{padding:18px 0;border-radius:18px;font-weight:800;font-size:17px;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:transform .08s,opacity .2s}
+.act:active{transform:scale(.96)}
+.act[disabled]{opacity:.3}
+.act.H{background:linear-gradient(180deg,rgba(255,93,98,.3),rgba(255,93,98,.14));color:#ffd3d4}
+.act.S{background:linear-gradient(180deg,rgba(240,199,94,.32),rgba(240,199,94,.14));color:#ffe6a8}
+.act.D{background:linear-gradient(180deg,rgba(61,220,132,.3),rgba(61,220,132,.13));color:#c9f8dc}
+.act.P{background:linear-gradient(180deg,rgba(90,169,255,.3),rgba(90,169,255,.13));color:#d2e7ff}
+.act.right{box-shadow:0 0 0 3px var(--green)}
+.act.bad{box-shadow:0 0 0 3px var(--red)}
+.bsfb{min-height:64px;text-align:center;font-size:15px;line-height:1.45;margin-top:12px;font-weight:600}
+.bsfb .muted{color:var(--muted);font-weight:500}
+.weak{display:flex;flex-direction:column;gap:8px}
+.weak .w{display:flex;align-items:center;gap:10px;font-size:14px}
+.weak .w b{flex:1}
+.weak .w span{color:var(--red);font-weight:800}
+/* theory */
+.acc{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.acc+.acc{margin-top:10px}
+.acc-h{width:100%;display:flex;align-items:center;gap:12px;padding:16px;text-align:left}
+.acc-h .n{width:30px;height:30px;border-radius:9px;background:rgba(240,199,94,.14);color:var(--gold);display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.acc-h .t{flex:1;font-weight:700;font-size:16px}
+.acc-h .t small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:1px}
+.acc-h .chev{transition:transform .25s;color:var(--dim)}
+.acc.open .chev{transform:rotate(90deg)}
+.acc-b{display:none;padding:0 16px 18px;color:rgba(245,241,230,.85);font-size:15px;line-height:1.6}
+.acc.open .acc-b{display:block;animation:fade .25s}
+.acc-b p+p{margin-top:10px}
+.acc-b b{color:var(--txt)}
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.val{border-radius:16px;padding:12px 8px;text-align:center;border:1px solid var(--line)}
+.val .big{font-size:26px;font-weight:800}
+.val .rk{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.val.p{background:rgba(61,220,132,.1)}.val.p .big{color:var(--green)}
+.val.z{background:rgba(255,255,255,.05)}
+.val.m{background:rgba(255,93,98,.1)}.val.m .big{color:var(--red)}
+.ex{background:rgba(0,0,0,.25);border-radius:16px;padding:14px;margin-top:12px}
+.ex-cards{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;min-height:74px}
+.ex-cards .pc{--w:48px;animation:deal .2s}
+.ex-cards .pc .ix{font-size:13px}
+.ex-cards .pc .ctr{font-size:18px}
+.ex-cards .pc .ix.b{display:none}
+.ex-cards .pc.dim{opacity:.35}
+.ex-rc{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.ex-rc b{font-size:26px;font-weight:800}
+.ex-rc .btn-s{padding:10px 16px;border-radius:12px;background:var(--gold);color:#2a1d02;font-weight:800}
+.formula{background:rgba(240,199,94,.08);border:1px solid rgba(240,199,94,.2);border-radius:16px;padding:14px;text-align:center;font-weight:800;font-size:17px;margin:12px 0}
+.formula small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:4px}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+table.t td,table.t th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left}
+table.t th{color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+table.t td:last-child{text-align:right;font-weight:700}
+.bs-tabs{margin:10px 0}
+.bs{display:grid;grid-template-columns:44px repeat(10,1fr);gap:2px;font-size:11px;font-weight:800;text-align:center}
+.bs div{padding:7px 0;border-radius:5px}
+.bs .hd{color:var(--muted);background:transparent}
+.bs .rh{color:var(--txt);background:rgba(255,255,255,.06);text-align:center}
+.bs .H{background:rgba(255,93,98,.22);color:#ffc2c4}
+.bs .S{background:rgba(240,199,94,.24);color:#ffe3a1}
+.bs .D{background:rgba(61,220,132,.24);color:#b8f5d2}
+.bs .Ds{background:linear-gradient(135deg,rgba(61,220,132,.26) 50%,rgba(240,199,94,.24) 50%);color:#d6f7e4}
+.bs .P{background:rgba(90,169,255,.25);color:#c7e1ff}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12px;color:var(--muted);font-weight:600}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+ul.ck{list-style:none;padding:0;margin-top:8px}
+ul.ck li{padding:7px 0 7px 28px;position:relative}
+ul.ck li::before{content:"";position:absolute;left:0;top:10px;width:18px;height:18px;border-radius:6px;background:rgba(61,220,132,.18);box-shadow:inset 0 0 0 1.5px var(--green)}
+ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px var(--red)}
+.foot{color:var(--dim);font-size:12px;text-align:center;margin-top:22px;line-height:1.5}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<!-- MENU -->
-<section id="menu">
-  <h1>Тренажёр Hi-Lo</h1>
-  <p class="sub">2–6 = +1 · 7–9 = 0 · 10–A = −1</p>
-  <div class="tabs">
-    <button class="tab on" data-tab="tap">Тыкалка</button>
-    <button class="tab" data-tab="run">Бегущий счёт</button>
-    <button class="tab" data-tab="tc">Истинный счёт</button>
+<!-- ============ TAP ============ -->
+<main class="view" id="v-tap">
+  <div class="eyebrow">Hi-Lo тренажёр</div>
+  <h1 class="title">Тыкалка</h1>
+  <p class="lead">Жми значение каждой карты. Самый быстрый способ вбить в голову −1, 0 и +1.</p>
+  <div class="hero">
+    <div class="hero-cards"><div class="mini r" style="right:44px;top:12px;transform:rotate(-12deg)">5</div><div class="mini" style="right:10px;top:0;transform:rotate(9deg)">K</div></div>
+    <h2>Сначала точность, потом скорость</h2>
+    <p>Выбей 100% без таймера, затем ускоряйся.</p>
+    <div class="stats"><div class="stat"><b id="h-acc">—</b><span>точность</span></div><div class="stat"><b id="h-cards">0</b><span>карт</span></div><div class="stat"><b id="h-runs">0</b><span>заходов</span></div></div>
   </div>
-
-  <div id="tab-tap">
-    <div class="box"><div class="list">Просто жми <b style="color:var(--txt)">−1 / 0 / +1</b> на каждую карту. Ничего вписывать не надо, в конце покажу точность.</div></div>
-    <div class="box"><p class="lbl">Сколько карт</p>
-      <div class="seg" data-set="tn">
-        <button data-v="20">20</button><button data-v="52">Колода</button><button data-v="104">2 колоды</button><button data-v="312">6 колод</button>
-      </div></div>
-    <div class="box"><p class="lbl">Скорость</p>
-      <div class="seg" data-set="tspeed">
-        <button data-v="0">Без таймера</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45с</button>
-      </div></div>
-    <div class="box toggle" id="tg-live"><div>Показывать счёт на экране<small>Видишь, как копится бегущий счёт. Выключи, когда освоишься</small></div><div class="sw"></div></div>
-    <button class="big-btn" id="tstart">Погнали</button>
+  <div class="section-h">Настройки</div>
+  <div class="group">
+    <div class="row col"><div class="t">Сколько карт</div>
+      <div class="seg" data-set="tn"><button data-v="20">20</button><button data-v="52">Колода</button><button data-v="104">2 кол.</button><button data-v="312">6 кол.</button></div></div>
+    <div class="row col"><div class="t">Скорость</div>
+      <div class="seg" data-set="tspeed"><button data-v="0">Сам</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45с</button></div></div>
+    <div class="row tg" data-key="live"><div class="t">Счёт на экране<small>Видишь, как копится бегущий счёт</small></div><div class="sw"></div></div>
   </div>
+  <button class="cta" id="tstart"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>Начать</button>
+</main>
 
-  <div id="tab-run" class="hidden">
-    <div class="box"><p class="lbl">Сколько карт</p>
-      <div class="seg" data-set="n">
-        <button data-v="20">20</button><button data-v="51">Колода</button><button data-v="103">2 колоды</button><button data-v="234">Шуз 6×</button>
-      </div></div>
-    <div class="box"><p class="lbl">Карт за раз</p>
+<!-- ============ RUN ============ -->
+<main class="view hidden" id="v-run">
+  <div class="eyebrow">Hi-Lo тренажёр</div>
+  <h1 class="title">Бегущий счёт</h1>
+  <p class="lead">Держи счёт в голове и назови его в конце. Как в казино, только без охраны.</p>
+  <div class="hero" style="background:radial-gradient(120% 140% at 100% 0%,#7a5a1f 0%,#3f2f0f 45%,#1a1408 100%)">
+    <div class="hero-cards"><div class="mini" style="right:44px;top:12px;transform:rotate(-12deg)">A</div><div class="mini r" style="right:10px;top:0;transform:rotate(9deg)">3</div></div>
+    <h2>Цель: колода быстрее 25 секунд</h2>
+    <p>Режим «Сам», 1 карта, без ошибок.</p>
+    <div class="stats"><div class="stat"><b id="h-best">—</b><span>рекорд</span></div><div class="stat"><b id="h-racc">—</b><span>верно</span></div><div class="stat"><b id="h-rruns">0</b><span>прогонов</span></div></div>
+  </div>
+  <div class="section-h">Настройки</div>
+  <div class="group">
+    <div class="row col"><div class="t">Сколько карт</div>
+      <div class="seg" data-set="n"><button data-v="20">20</button><button data-v="51">Колода</button><button data-v="103">2 кол.</button><button data-v="234">Шуз 6×</button></div></div>
+    <div class="row col"><div class="t">Карт за раз</div>
       <div class="seg" data-set="per"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button></div></div>
-    <div class="box"><p class="lbl">Скорость</p>
-      <div class="seg" data-set="speed">
-        <button data-v="0">Тапом</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45с</button><button data-v="300">0.3с</button>
-      </div></div>
-    <div class="box toggle" id="tg-checks"><div>Внезапные проверки<small>Время от времени спрашивает счёт по ходу</small></div><div class="sw"></div></div>
-    <button class="big-btn" id="start">Погнали</button>
-    <div class="stat-line" id="stat-run"></div>
-    <div class="box" style="margin-top:12px"><p class="lbl">Подсказки</p>
-      <div class="list">• «Колода» — 51 карта, одна остаётся закрытой. В конце угадай по счёту, крупная она или мелкая.<br>
-      • Маленькая карта + крупная = 0. Считай парами, будет быстрее.<br>
-      • Цель: колода тапом меньше чем за 25 секунд без ошибок, потом 2–3 карты за раз на 0.7с.</div></div>
+    <div class="row col"><div class="t">Скорость</div>
+      <div class="seg" data-set="speed"><button data-v="0">Сам</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45</button><button data-v="300">0.3</button></div></div>
+    <div class="row tg" data-key="checks"><div class="t">Внезапные проверки<small>Тренажёр иногда спрашивает счёт по ходу</small></div><div class="sw"></div></div>
   </div>
+  <button class="cta" id="start"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>Раздать</button>
+  <p class="foot">«Колода» — это 51 карта, последняя закрыта. По финальному счёту можно угадать, какая она.</p>
+</main>
 
-  <div id="tab-tc" class="hidden">
-    <div class="box">
-      <div class="tc-wrap">
-        <div class="tc-left">
-          <div><p class="lbl" style="margin:0">Бегущий счёт</p><div class="rc-big" id="tc-rc">+0</div></div>
-          <div><p class="lbl" style="margin:0">Осталось колод</p><div style="font-size:26px;font-weight:700" id="tc-d">3</div></div>
-        </div>
-        <div class="tray"><div class="tray-box" id="tray"><div class="tray-fill" id="tray-fill"></div></div><small>сброс<br>(шуз 6 колод)</small></div>
+<!-- ============ TRUE COUNT ============ -->
+<main class="view hidden" id="v-tc">
+  <div class="eyebrow">Hi-Lo тренажёр</div>
+  <h1 class="title">Истинный счёт</h1>
+  <p class="lead">Бегущий счёт делишь на число оставшихся колод и округляешь вниз.</p>
+  <div class="card">
+    <div class="tc-card">
+      <div class="tc-l">
+        <div><label>Бегущий счёт</label><div class="rc-big" id="tc-rc">+0</div></div>
+        <div><label>Осталось колод</label><div class="dk num" id="tc-d">3</div></div>
       </div>
+      <div class="tray"><div class="tray-box" id="tray"><div class="tray-fill" id="tray-fill"></div></div><small>сброс<br>шуз 6 колод</small></div>
     </div>
-    <div class="explain" id="tc-exp">Дели бегущий счёт на оставшиеся колоды и округляй вниз (к нулю).</div>
-    <div id="tc-kp"></div>
-    <div class="streak"><span id="tc-streak">Серия: 0</span><span id="tc-acc">Точность: —</span></div>
-    <div class="box toggle" id="tg-hard" style="margin-top:10px"><div>Хард: без числа колод<small>Колоды оцениваешь сам по сбросу, как в казино</small></div><div class="sw"></div></div>
   </div>
-</section>
+  <div class="explain" id="tc-exp"><span class="muted">Сколько будет истинный счёт?</span></div>
+  <div id="tc-kp"></div>
+  <div class="chipsrow"><span id="tc-streak">Серия: 0</span><span id="tc-acc">Точность: —</span></div>
+  <div class="group" style="margin-top:14px"><div class="row tg" data-key="hard"><div class="t">Хард-режим<small>Число колод скрыто, оцениваешь по сбросу</small></div><div class="sw"></div></div></div>
+</main>
 
-<!-- PLAY -->
-<section id="play" class="hidden">
-  <div class="bar">
-    <div class="info"><b id="p-pos">0</b>/<span id="p-len">0</span> · <span id="p-time">0.0</span>с</div>
-    <div id="p-live" class="hidden" style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin-right:4px">0</div>
-    <button class="ghost" id="p-pause">Пауза</button>
-    <button class="ghost" id="p-stop">✕</button>
+<!-- ============ STRATEGY ============ -->
+<main class="view hidden" id="v-bs">
+  <div class="eyebrow">Hi-Lo тренажёр</div>
+  <h1 class="title">Стратегия</h1>
+  <p class="lead">Смотришь на свою руку и карту дилера, выбираешь ход. Таблица целиком лежит в «Теории».</p>
+  <div class="seg" data-set="bsmode" style="margin-bottom:12px"><button data-v="all">Все</button><button data-v="hard">Жёсткие</button><button data-v="soft">Мягкие</button><button data-v="pairs">Пары</button></div>
+  <div class="felt" id="felt">
+    <div class="tcchip hidden" id="bs-tc">TC +2</div>
+    <div class="lb">Дилер</div>
+    <div class="hand" id="bs-dealer"></div>
+    <div class="mid"></div>
+    <div class="hand" id="bs-player"></div>
+    <div class="tot" id="bs-tot"></div>
+  </div>
+  <div class="acts" id="acts"><button class="act H" data-a="H">Взять</button><button class="act S" data-a="S">Стоп</button><button class="act D" data-a="D">Удвоить</button><button class="act P" data-a="P">Сплит</button></div>
+  <div class="bsfb" id="bs-fb"><span class="muted">Что делаешь?</span></div>
+  <div class="chipsrow"><span id="bs-streak">Серия: 0</span><span id="bs-best">Рекорд: 0</span><span id="bs-acc">Точность: —</span></div>
+  <div class="group" style="margin-top:14px"><div class="row tg" data-key="dev"><div class="t">Отклонения по счёту<small>Появится истинный счёт, и при нужном значении правильный ход меняется</small></div><div class="sw"></div></div></div>
+  <div class="section-h">Твои слабые места</div>
+  <div class="card"><div class="weak" id="bs-weak"><span style="color:var(--muted);font-size:14px">Пока чисто. Ошибки будут копиться здесь.</span></div></div>
+</main>
+
+<!-- ============ THEORY ============ -->
+<main class="view hidden" id="v-learn">
+  <div class="eyebrow">Теория</div>
+  <h1 class="title">Как считать карты</h1>
+  <p class="lead">Всё, что нужно знать про Hi-Lo, по шагам. Тапни раздел, чтобы раскрыть.</p>
+
+  <div class="acc open"><button class="acc-h"><div class="n">1</div><div class="t">Зачем это работает<small>Откуда берётся преимущество</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>Карты, которые вышли, обратно в шуз не возвращаются. Значит, состав оставшейся колоды всё время меняется.</p>
+      <p>Когда в колоде много <b>десяток и тузов</b>, выигрываешь ты: чаще падает блэкджек (он платит 3:2), удвоения заходят лучше, а дилер чаще перебирает, потому что обязан добирать до 17.</p>
+      <p>Когда в колоде много <b>мелочи</b>, ситуация обратная, и плюс у казино. Подсчёт нужен, чтобы понимать, в какой ситуации ты сейчас, и ставить больше, когда колода за тебя.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">2</div><div class="t">Значения карт<small>Единственное, что надо выучить наизусть</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <div class="vals"><div class="val p"><div class="big">+1</div><div class="rk">2 3 4 5 6</div></div><div class="val z"><div class="big">0</div><div class="rk">7 8 9</div></div><div class="val m"><div class="big">−1</div><div class="rk">10 J Q K A</div></div></div>
+      <p>Вышла мелкая карта: в колоде стало больше крупных, это хорошо для тебя, поэтому <b>+1</b>. Вышла крупная: <b>−1</b>. Семь, восемь и девять нейтральны, их просто пропускаешь.</p>
+      <p>Плюсовых и минусовых карт в колоде поровну (по 20), поэтому полная колода в сумме всегда даёт <b>0</b>. На этом построена проверка в тренажёре.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">3</div><div class="t">Бегущий счёт<small>Интерактивный пример</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>После перемешивания начинаешь с нуля и прибавляешь значение каждой открытой карты на столе: своей, чужой и дилерской.</p>
+      <div class="ex"><div class="ex-cards" id="ex-cards"></div>
+        <div class="ex-rc"><div><span style="color:var(--muted);font-size:13px;font-weight:600">Счёт</span><br><b id="ex-rc" class="num">0</b></div><div id="ex-note" style="flex:1;padding:0 12px;font-size:13px;color:var(--muted)"></div><button class="btn-s" id="ex-next">Дальше</button></div></div>
+      <p style="margin-top:12px"><b>Фишка:</b> мелкая и крупная карты гасят друг друга. Если на столе 5 и K, это ноль, их можно даже не считать.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">4</div><div class="t">Истинный счёт<small>Поправка на число колод</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>Бегущий счёт +6 значит очень разное, если в шузе осталась одна колода или пять. Поэтому его переводят в «плюс на одну колоду».</p>
+      <div class="formula">Истинный = Бегущий ÷ Оставшиеся колоды<small>Округляешь вниз (к нулю)</small></div>
+      <p>Пример: бегущий <b>+6</b>, осталось <b>3</b> колоды, значит истинный <b>+2</b>. Бегущий <b>+6</b>, осталась <b>1</b>, значит <b>+6</b>, и это уже жирно.</p>
+      <p>Сколько колод осталось, в казино видно по высоте стопки сброса. Точно знать не обязательно: хватит оценки с точностью до половины колоды.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">5</div><div class="t">Ставки<small>Здесь ты и зарабатываешь</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>Юнит — это твоя минимальная ставка. Пока истинный счёт +1 или ниже, ставишь минималку. Дальше ставка растёт вместе со счётом:</p>
+      <div class="formula">Ставка = (Истинный − 1) юнитов</div>
+      <table class="t"><tr><th>Истинный</th><th>Перевес</th><th>Ставка</th></tr>
+        <tr><td>≤ +1</td><td style="color:var(--red)">у казино</td><td>1</td></tr>
+        <tr><td>+2</td><td>≈ ноль</td><td>1</td></tr>
+        <tr><td>+3</td><td style="color:var(--green)">≈ +1%</td><td>2</td></tr>
+        <tr><td>+4</td><td style="color:var(--green)">≈ +1.5%</td><td>3</td></tr>
+        <tr><td>+5 и выше</td><td style="color:var(--green)">≈ +2%</td><td>4–8</td></tr></table>
+      <p style="margin-top:12px">Каждый +1 истинного счёта даёт тебе примерно +0.5%. Банкролл держи хотя бы на <b>1000 юнитов</b>: разброс огромный, и проигрышные серии будут.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">6</div><div class="t">Базовая стратегия<small>Без неё считать бесполезно</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>Таблица для 4–8 колод: дилер стоит на мягких 17, удвоение после сплита разрешено. Строки — твоя рука, столбцы — открытая карта дилера.</p>
+      <div class="seg bs-tabs" id="bs-tabs"><button data-v="hard" class="on">Жёсткие</button><button data-v="soft">Мягкие</button><button data-v="pairs">Пары</button></div>
+      <div class="bs" id="bs"></div>
+      <div class="legend"><span><i style="background:rgba(255,93,98,.5)"></i>Взять</span><span><i style="background:rgba(240,199,94,.55)"></i>Стоп</span><span><i style="background:rgba(61,220,132,.55)"></i>Удвоить</span><span><i style="background:linear-gradient(135deg,rgba(61,220,132,.6) 50%,rgba(240,199,94,.6) 50%)"></i>Удвоить, иначе стоп</span><span><i style="background:rgba(90,169,255,.55)"></i>Сплит</span></div>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">7</div><div class="t">Отклонения по счёту<small>Когда нарушать таблицу</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <p>При высоком счёте некоторые решения из таблицы становятся неправильными. Вот самые выгодные (по истинному счёту):</p>
+      <table class="t"><tr><th>Рука</th><th>Делай</th><th>Когда</th></tr>
+        <tr><td>Страховка</td><td>брать</td><td>≥ +3</td></tr>
+        <tr><td>16 vs 10</td><td>стоп</td><td>≥ 0</td></tr>
+        <tr><td>15 vs 10</td><td>стоп</td><td>≥ +4</td></tr>
+        <tr><td>10,10 vs 5</td><td>сплит</td><td>≥ +5</td></tr>
+        <tr><td>10,10 vs 6</td><td>сплит</td><td>≥ +4</td></tr>
+        <tr><td>10 vs 10</td><td>удвоить</td><td>≥ +4</td></tr>
+        <tr><td>12 vs 3</td><td>стоп</td><td>≥ +2</td></tr>
+        <tr><td>12 vs 2</td><td>стоп</td><td>≥ +3</td></tr>
+        <tr><td>11 vs A</td><td>удвоить</td><td>≥ +1</td></tr>
+        <tr><td>9 vs 2</td><td>удвоить</td><td>≥ +1</td></tr>
+        <tr><td>10 vs A</td><td>удвоить</td><td>≥ +4</td></tr>
+        <tr><td>9 vs 7</td><td>удвоить</td><td>≥ +3</td></tr>
+        <tr><td>16 vs 9</td><td>стоп</td><td>≥ +5</td></tr></table>
+      <p style="margin-top:12px">Начни с первых трёх: страховка, 16 против десятки и 15 против десятки. Они дают львиную долю пользы.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">8</div><div class="t">Как тренироваться<small>План на 3–4 недели</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <ul class="ck">
+        <li><b>Неделя 1.</b> Тыкалка без таймера, пока не будет 100%. Потом 1 с и 0.7 с.</li>
+        <li><b>Неделя 2.</b> Бегущий счёт, колода в режиме «Сам». Цель: меньше 25 секунд без ошибок.</li>
+        <li><b>Неделя 3.</b> По 2–3 карты за раз, скорость 0.7 с, с внезапными проверками.</li>
+        <li><b>Неделя 4.</b> Шуз на 6 колод и дрилл истинного счёта, лучше под шум (подкаст на фоне).</li>
+      </ul>
+      <p style="margin-top:8px">15–20 минут каждый день работают лучше, чем 2 часа раз в неделю.</p>
+    </div></div>
+
+  <div class="acc"><button class="acc-h"><div class="n">9</div><div class="t">Реальность<small>Где это работает, а где нет</small></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="acc-b">
+      <ul class="ck">
+        <li>Живой стол, шуз с ручным перемешиванием</li>
+        <li>Блэкджек платит 3:2</li>
+        <li>Перемешивают после 75% шуза или позже</li>
+        <li class="no">Онлайн с RNG: колоду тасуют перед каждой раздачей</li>
+        <li class="no">Автомат непрерывного тасования (CSM)</li>
+        <li class="no">Блэкджек платит 6:5, уходи сразу</li>
+      </ul>
+      <p style="margin-top:8px">Считать в уме законно, но казино может попросить тебя уйти, если заметит резкие скачки ставок. Меняй ставки плавно и не пялься на стол.</p>
+    </div></div>
+  <p class="foot">Hi-Lo · система Харви Дубнера (1963), популяризирована Стэнфордом Вонгом</p>
+</main>
+
+<!-- ============ TAB BAR ============ -->
+<nav class="tabbar"><div class="in">
+  <button class="tb on" data-view="tap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 14.5a1.6 1.6 0 0 1 2.6-1.9L9 15.5"/></svg>Тыкалка</button>
+  <button class="tb" data-view="run"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="5" width="11" height="15" rx="2" transform="rotate(-8 9 12.5)"/><rect x="9.5" y="4" width="11" height="15" rx="2" transform="rotate(8 15 11.5)"/></svg>Счёт</button>
+  <button class="tb" data-view="tc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="6" r="1.3" fill="currentColor"/><circle cx="12" cy="18" r="1.3" fill="currentColor"/><path d="M5 12h14"/></svg>Истинный</button>
+  <button class="tb" data-view="bs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><path d="M14 17l2 2 4-4" stroke-linecap="round"/></svg>Стратегия</button>
+  <button class="tb" data-view="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>Теория</button>
+</div></nav>
+
+<!-- ============ PLAY ============ -->
+<section class="screen hidden" id="play">
+  <div class="ptop">
+    <button class="iconbtn" id="p-stop" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="pill num"><span id="p-pos">0</span><span style="opacity:.5">/<span id="p-len">0</span></span></div>
+    <div class="pill num" id="p-time">0.0с</div>
+    <div class="pill live num hidden" id="p-live">0</div>
+    <button class="iconbtn" id="p-pause" aria-label="Пауза" style="margin-left:auto"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg></button>
   </div>
   <div class="prog"><i id="p-prog"></i></div>
   <div class="table" id="table"></div>
-  <div class="vbtns" id="vbtns"><button class="m1" data-val="-1">−1</button><button data-val="0">0</button><button class="p1" data-val="1">+1</button></div>
+  <div class="vbtns" id="vbtns"><button class="vb m" data-val="-1">−1</button><button class="vb z" data-val="0">0</button><button class="vb p" data-val="1">+1</button></div>
 </section>
 
-<!-- RESULT -->
-<section id="result" class="hidden">
-  <div class="res-top"><div class="ic" id="r-ic"></div><h2 id="r-title"></h2><p class="sub" id="r-sub" style="margin:0"></p></div>
-  <div class="grid2 box">
-    <div class="kv"><span>Твой ответ</span><b id="r-ans"></b></div>
-    <div class="kv"><span>Правильно</span><b id="r-real"></b></div>
+<!-- ============ RESULT ============ -->
+<section class="screen res hidden" id="result">
+  <div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="10"/><circle id="r-arc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" style="transition:stroke-dashoffset .9s cubic-bezier(.2,.9,.3,1)"/><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ffdc7a"/><stop offset="1" stop-color="#3ddc84"/></linearGradient></defs></svg>
+    <div class="v"><b id="r-big" class="num"></b><span id="r-bigl"></span></div></div>
+  <h2 id="r-title"></h2>
+  <p class="sub" id="r-sub"></p>
+  <div class="kvs">
+    <div class="kv"><span id="r-k1">Твой ответ</span><b id="r-ans"></b></div>
+    <div class="kv"><span id="r-k2">Правильно</span><b id="r-real"></b></div>
     <div class="kv"><span>Время</span><b id="r-time"></b></div>
     <div class="kv"><span>Сек на карту</span><b id="r-spc"></b></div>
   </div>
-  <div class="box hidden" id="r-extra"><div class="list" id="r-extra-txt"></div></div>
-  <div class="box hidden" id="r-cls"><p class="lbl">Значения карт (кнопки)</p><div class="list" id="r-cls-txt"></div></div>
-  <div class="box hidden" id="r-checks"><p class="lbl">Проверки по ходу</p><div class="list" id="r-checks-txt"></div></div>
-  <div class="row"><button class="ghost" id="r-menu">Меню</button><button class="big-btn" id="r-again">Ещё раз</button></div>
+  <div class="note hidden" id="r-extra"></div>
+  <div class="note hidden" id="r-cls"></div>
+  <div class="note hidden" id="r-checks"></div>
+  <div class="res-actions"><button class="btn2" id="r-menu">Меню</button><button class="cta" id="r-again">Ещё раз</button></div>
 </section>
 
-</div>
-
-<div class="ov hidden" id="ov"><div class="ov-in">
-  <h2 id="ov-title"></h2><p id="ov-sub"></p>
+<!-- ============ SHEET ============ -->
+<div class="ov hidden" id="ov"><div class="sheet">
+  <div class="grab"></div>
+  <h3 id="ov-title"></h3><p id="ov-sub"></p>
   <div id="ov-fb" class="fb hidden"></div>
   <div id="ov-kp"></div>
-  <div id="ov-extra"></div>
 </div></div>
 
 <script>
-const $=s=>document.querySelector(s);
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SUITS=['♠','♥','♦','♣'];
 const hl=r=>['2','3','4','5','6'].includes(r)?1:['7','8','9'].includes(r)?0:-1;
 const fmt=n=>(n>0?'+':n<0?'−':'')+Math.abs(n);
 const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
 const store={get(k,d){try{const v=localStorage.getItem('cc_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('cc_'+k,JSON.stringify(v))}catch(e){}}};
-
-let S=Object.assign({n:'51',per:'1',speed:'0',checks:false,hard:false,tn:'20',tspeed:'0',live:true},store.get('settings',{}));
+let S=Object.assign({n:'51',per:'1',speed:'0',checks:false,hard:false,tn:'20',tspeed:'0',live:true,bsmode:'all',dev:false},store.get('settings',{}));
 const saveS=()=>store.set('settings',S);
 
 /* ---------- keypad ---------- */
 let activeKP=null;
 function Keypad(el,onSubmit){
   let v='';
-  el.innerHTML=`<div class="kp-disp empty">?</div><div class="kp-grid">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<button class="sign" data-k="±">±</button><button data-k="0">0</button><button data-k="⌫">⌫</button></div><button class="big-btn" data-k="ok">Ответить</button>`;
+  el.innerHTML=`<div class="kp-disp empty">?</div><div class="kp-grid">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<button class="sign" data-k="±">±</button><button data-k="0">0</button><button data-k="⌫">⌫</button></div><button class="cta kp-ok" data-k="ok">Ответить</button>`;
   const disp=el.querySelector('.kp-disp');
-  const render=()=>{const e=v===''||v==='-';disp.textContent=v===''?'?':v.replace('-','−')+(v==='-'?'':'');disp.classList.toggle('empty',e)};
+  const render=()=>{disp.textContent=v===''?'?':v==='-'?'−':(v.startsWith('-')?'−'+v.slice(1):(v==='0'?'0':'+'+v));disp.classList.toggle('empty',v===''||v==='-')};
   const kp={press(k){
       if(k==='±')v=v.startsWith('-')?v.slice(1):'-'+v;
       else if(k==='⌫')v=v.slice(0,-1);
@@ -250,61 +540,68 @@ document.addEventListener('keydown',e=>{
   if((e.key===' '||e.key==='ArrowRight')&&G&&G.state==='run'&&G.manual){e.preventDefault();step()}
 });
 
-/* ---------- menu ---------- */
-function show(id){['menu','play','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
-document.querySelectorAll('[data-set]').forEach(seg=>{
+/* ---------- navigation ---------- */
+let view='tap';
+function go(v){
+  view=v;['tap','run','tc','bs','learn'].forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
+  $$('.tb').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  activeKP=v==='tc'?tcKP:null;window.scrollTo(0,0);store.set('view',v);
+}
+$$('.tb').forEach(b=>b.addEventListener('click',()=>{buzz(5);go(b.dataset.view)}));
+$$('[data-set]').forEach(seg=>{
   const key=seg.dataset.set;
   const paint=()=>seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S[key]));
-  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;saveS();paint()});
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;saveS();paint();if(key==='bsmode')newBS()});
   paint();
 });
-function toggleEl(id,key,cb){const el=$(id),sw=el.querySelector('.sw');const p=()=>sw.classList.toggle('on',!!S[key]);el.addEventListener('click',()=>{S[key]=!S[key];saveS();p();cb&&cb()});p()}
-toggleEl('#tg-checks','checks');
-toggleEl('#tg-live','live');
-toggleEl('#tg-hard','hard',()=>newTC());
-document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
-  const tb=t.dataset.tab,tc=tb==='tc';['tap','run','tc'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==tb));
-  activeKP=tc?tcKP:null;
-}));
+$$('.tg').forEach(el=>{const key=el.dataset.key,sw=el.querySelector('.sw');const p=()=>sw.classList.toggle('on',!!S[key]);
+  el.addEventListener('click',()=>{S[key]=!S[key];saveS();p();if(key==='hard')newTC();if(key==='dev')newBS()});p()});
 function paintStats(){
-  const st=store.get('stats',{runs:0,ok:0});
-  const best=store.get('best51',null);
-  let s=st.runs?`Прогонов: ${st.runs} · верно: ${Math.round(st.ok/st.runs*100)}%`:'';
-  if(best)s+=(s?' · ':'')+`рекорд колоды тапом: ${best.toFixed(1)}с`;
-  $('#stat-run').textContent=s;
+  const t=store.get('tapStats',{cards:0,ok:0,runs:0});
+  $('#h-acc').textContent=t.cards?Math.round(t.ok/t.cards*100)+'%':'—';
+  $('#h-cards').textContent=t.cards>9999?Math.round(t.cards/1000)+'k':t.cards;
+  $('#h-runs').textContent=t.runs;
+  const st=store.get('stats',{runs:0,ok:0}),best=store.get('best51',null);
+  $('#h-best').textContent=best?best.toFixed(1)+'с':'—';
+  $('#h-racc').textContent=st.runs?Math.round(st.ok/st.runs*100)+'%':'—';
+  $('#h-rruns').textContent=st.runs;
 }
 paintStats();
 
-/* ---------- running count game ---------- */
-let G=null;
+/* ---------- cards ---------- */
 function buildShoe(n){
   const decks=Math.ceil((n+1)/52);let a=[];
   for(let d=0;d<decks;d++)for(const s of SUITS)for(const r of RANKS)a.push({r,s});
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
-  return {cards:a.slice(0,n),rest:a.slice(n),decks};
+  return {cards:a.slice(0,n),rest:a.slice(n)};
 }
-function cardHTML(c,w){
-  const red=c.s==='♥'||c.s==='♦';
-  return `<div class="pc${red?' r':''}" style="--w:${w}"><div class="c">${c.r}<br>${c.s}</div><div class="m">${c.s}</div><div class="c c2">${c.r}<br>${c.s}</div></div>`;
+function cardHTML(c,w,cls=''){
+  const red=c.s==='♥'||c.s==='♦',face=['J','Q','K'].includes(c.r);
+  const mid=face?`<div class="face">${c.r}<i>${c.s}</i></div>`:`<div class="ctr">${c.s}</div>`;
+  return `<div class="pc${red?' r':''} ${cls}" style="${w?'--w:'+w:''}"><div class="ix">${c.r}<i>${c.s}</i></div>${mid}<div class="ix b">${c.r}<i>${c.s}</i></div></div>`;
 }
-const cardW=per=>({1:'min(48vw,210px)',2:'min(40vw,170px)',3:'min(28vw,140px)',4:'min(21vw,115px)'}[per]);
+const cardW=per=>({1:'min(52vw,220px)',2:'min(40vw,175px)',3:'min(28vw,140px)',4:'min(21vw,112px)'}[per]);
+const ARC='<svg class="arc" viewBox="0 0 400 200"><defs><path id="ap" d="M30 170 Q200 30 370 170"/></defs><text fill="#f0c75e" font-family="Playfair Display,serif" font-size="17" font-weight="700" letter-spacing="3"><textPath href="#ap" startOffset="50%" text-anchor="middle">BLACKJACK PAYS 3 TO 2</textPath></text></svg>';
 
+/* ---------- game ---------- */
+let G=null;
 function startGame(tap){
   tap=tap===true;
   const n=tap?+S.tn:+S.n,sh=buildShoe(n),sp=tap?S.tspeed:S.speed;
-  G={tap,live:tap&&S.live,n,per:tap?1:+S.per,speed:+sp,manual:sp==='0',checks:tap?false:S.checks,shoe:sh.cards,rest:sh.rest,decks:sh.decks,
+  G={tap,live:tap&&S.live,n,per:tap?1:+S.per,speed:+sp,manual:sp==='0',checks:tap?false:S.checks,shoe:sh.cards,rest:sh.rest,
      pos:0,rc:0,answered:true,used:false,cls:{ok:0,bad:0,miss:0},state:'count',paused:0,t0:0,pauseStart:0,timer:null,log:[],nextCheck:rand(10,22)};
-  $('#p-len').textContent=n;$('#p-pos').textContent=0;$('#p-time').textContent='0.0';$('#p-prog').style.width='0';
-  $('#p-pause').textContent='Пауза';$('#p-live').classList.toggle('hidden',!G.live);$('#p-live').textContent='0';
-  const tb=$('#table');tb.classList.toggle('manual',G.manual);$('#vbtns').classList.toggle('hidden',G.per!==1);
-  show('play');
-  let c=3;tb.innerHTML=`<div class="cd">${c}</div>`;
-  const tick=()=>{c--;if(!G||G.state!=='count')return;if(c>0){tb.innerHTML=`<div class="cd">${c}</div>`;G.timer=setTimeout(tick,600)}else{G.state='run';G.t0=performance.now();G.clock=setInterval(updTime,100);step()}};
+  $('#p-len').textContent=n;$('#p-pos').textContent=0;$('#p-time').textContent='0.0с';$('#p-prog').style.width='0';
+  $('#p-live').classList.toggle('hidden',!G.live);setLive(0);
+  $('#vbtns').classList.toggle('hidden',G.per!==1);
+  $('#result').classList.add('hidden');$('#play').classList.remove('hidden');
+  const tb=$('#table');
+  let c=3;tb.innerHTML=ARC+`<div class="cd">${c}</div>`;
+  const tick=()=>{c--;if(!G||G.state!=='count')return;if(c>0){tb.innerHTML=ARC+`<div class="cd">${c}</div>`;G.timer=setTimeout(tick,600)}else{G.state='run';G.t0=performance.now();G.clock=setInterval(updTime,100);step()}};
   G.timer=setTimeout(tick,600);
 }
+function setLive(v){const el=$('#p-live');el.textContent=fmt(v)||'0';el.classList.toggle('pos',v>0);el.classList.toggle('neg',v<0)}
 function elapsed(){return(performance.now()-G.t0-G.paused)/1000}
-function updTime(){if(G&&G.state==='run')$('#p-time').textContent=elapsed().toFixed(1)}
+function updTime(){if(G&&G.state==='run')$('#p-time').textContent=elapsed().toFixed(1)+'с'}
 function step(){
   if(!G||G.state!=='run')return;
   clearTimeout(G.timer);
@@ -315,7 +612,7 @@ function step(){
   const grp=G.shoe.slice(G.pos,G.pos+G.per);
   G.pos+=grp.length;grp.forEach(c=>G.rc+=hl(c.r));
   const w=cardW(G.per);
-  $('#table').innerHTML=grp.map(c=>cardHTML(c,w)).join('')+(G.manual&&G.pos<=G.per*2?'<div class="hint">жми значение карты или тапай по столу</div>':'');
+  $('#table').innerHTML=ARC+grp.map(c=>cardHTML(c,w)).join('')+(G.manual&&G.pos<=G.per*2?`<div class="hint">${G.per===1?'жми значение или тапни по столу':'тапни по столу, чтобы раздать дальше'}</div>`:'');
   $('#p-pos').textContent=G.pos;$('#p-prog').style.width=(G.pos/G.n*100)+'%';
   if(!G.manual)G.timer=setTimeout(step,G.speed);
 }
@@ -324,34 +621,34 @@ function vpress(v){
   if(G.answered){if(G.manual)step();return}
   G.used=true;G.answered=true;
   const c=G.shoe[G.pos-1],real=hl(c.r),el=$('#table .pc');
-  if(G.live)$('#p-live').textContent=fmt(G.rc);
-  if(v===real){G.cls.ok++;el&&el.classList.add('good');if(G.manual)return step()}
-  else{G.cls.bad++;if(el){el.classList.add('wrong');el.insertAdjacentHTML('beforeend',`<div class="badge">${fmt(real)}</div>`)}
-    if(G.manual){G.state='hold';clearTimeout(G.timer);setTimeout(()=>{if(G&&G.state==='hold'){G.state='run';step()}},700)}}
+  if(G.live)setLive(G.rc);
+  if(v===real){G.cls.ok++;buzz(8);el&&el.classList.add('good');if(G.manual)return step()}
+  else{G.cls.bad++;buzz([30,40,30]);if(el){el.classList.add('wrong');el.insertAdjacentHTML('beforeend',`<div class="badge">${fmt(real)||'0'}</div>`)}
+    if(G.manual){G.state='hold';clearTimeout(G.timer);setTimeout(()=>{if(G&&G.state==='hold'){G.state='run';step()}},750)}}
 }
-document.querySelectorAll('#vbtns button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();vpress(+b.dataset.val)}));
+$$('#vbtns .vb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();vpress(+b.dataset.val)}));
 $('#table').addEventListener('click',()=>{if(G&&G.state==='run'&&G.manual)step();else if(G&&G.state==='paused')togglePause()});
 function togglePause(){
   if(!G)return;
-  if(G.state==='run'){G.state='paused';clearTimeout(G.timer);G.pauseStart=performance.now();$('#p-pause').textContent='Дальше';
-    $('#table').insertAdjacentHTML('beforeend','<div class="paused">Пауза · тапни, чтобы продолжить</div>')}
-  else if(G.state==='paused'){G.paused+=performance.now()-G.pauseStart;G.state='run';$('#p-pause').textContent='Пауза';
-    const p=$('#table .paused');p&&p.remove();if(!G.manual)G.timer=setTimeout(step,G.speed)}
+  if(G.state==='run'){G.state='paused';clearTimeout(G.timer);G.pauseStart=performance.now();
+    $('#table').insertAdjacentHTML('beforeend','<div class="pausedov"><svg width="44" height="44" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>Пауза — тапни, чтобы продолжить</div>')}
+  else if(G.state==='paused'){G.paused+=performance.now()-G.pauseStart;G.state='run';
+    const p=$('#table .pausedov');p&&p.remove();if(!G.manual)G.timer=setTimeout(step,G.speed)}
 }
 $('#p-pause').addEventListener('click',togglePause);
-$('#p-stop').addEventListener('click',()=>{if(G){clearTimeout(G.timer);clearInterval(G.clock)}G=null;closeOv();show('menu')});
+function quit(){if(G){clearTimeout(G.timer);clearInterval(G.clock)}G=null;closeOv();$('#play').classList.add('hidden');$('#result').classList.add('hidden');paintStats();activeKP=view==='tc'?tcKP:null}
+$('#p-stop').addEventListener('click',quit);
 
-/* overlay */
+/* sheet */
 let ovCb=null;
 const ovKP=Keypad($('#ov-kp'),n=>ovCb&&ovCb(n));
-function openOv(title,sub,cb){$('#ov-title').textContent=title;$('#ov-sub').textContent=sub;$('#ov-fb').classList.add('hidden');$('#ov-kp').classList.remove('hidden');$('#ov-extra').innerHTML='';ovKP.reset();ovCb=cb;$('#ov').classList.remove('hidden');activeKP=ovKP}
+function openOv(title,sub,cb){$('#ov-title').textContent=title;$('#ov-sub').textContent=sub;$('#ov-fb').classList.add('hidden');$('#ov-kp').classList.remove('hidden');ovKP.reset();ovCb=cb;$('#ov').classList.remove('hidden');activeKP=ovKP}
 function closeOv(){$('#ov').classList.add('hidden');activeKP=null;ovCb=null}
-
 function askCheck(){
   G.state='ask';G.pauseStart=performance.now();
-  openOv('Проверка!','Какой сейчас бегущий счёт?',ans=>{
-    const ok=ans===G.rc;G.log.push({at:G.pos,ans,real:G.rc,ok});
-    const fb=$('#ov-fb');fb.className='fb '+(ok?'ok':'bad');fb.textContent=ok?'✓ Верно, '+fmt(G.rc):'✗ Было '+fmt(G.rc)+' — продолжаем с него';
+  openOv('Проверка','Какой сейчас бегущий счёт?',ans=>{
+    const ok=ans===G.rc;G.log.push({at:G.pos,ans,real:G.rc,ok});buzz(ok?10:[30,40,30]);
+    const fb=$('#ov-fb');fb.className='fb '+(ok?'ok':'bad');fb.textContent=ok?'✓ Верно, '+(fmt(G.rc)||'0'):'✗ Было '+(fmt(G.rc)||'0')+', продолжаем с него';
     $('#ov-kp').classList.add('hidden');ovCb=null;activeKP=null;
     setTimeout(()=>{closeOv();if(!G)return;G.paused+=performance.now()-G.pauseStart;G.nextCheck=G.pos+rand(10,22);G.state='run';step()},ok?700:1500);
   });
@@ -360,81 +657,206 @@ function finish(){
   if(G.per===1&&G.used&&!G.answered){G.cls.miss++;G.answered=true}
   G.state='ask';clearInterval(G.clock);const t=elapsed();
   if(G.tap)return showTapResult(t);
-  openOv('Финиш','Итоговый бегущий счёт?',ans=>{closeOv();showResult(ans,t)});
+  openOv('Финиш','Какой итоговый бегущий счёт?',ans=>{closeOv();showResult(ans,t)});
 }
+function ring(p,big,lbl){
+  $('#r-big').textContent=big;$('#r-bigl').textContent=lbl;
+  const a=$('#r-arc');a.style.transition='none';a.style.strokeDashoffset=326.7;a.getBoundingClientRect();
+  a.style.transition='';requestAnimationFrame(()=>a.style.strokeDashoffset=326.7*(1-p));
+}
+function showRes(){$('#play').classList.add('hidden');$('#result').classList.remove('hidden');$('#result').scrollTop=0}
 function showTapResult(t){
   const k=G.cls,tot=k.ok+k.bad+k.miss,acc=tot?Math.round(k.ok/tot*100):0;
-  $('#r-ic').textContent=acc===100?'🔥':acc>=90?'✅':acc>=75?'👌':'❌';
-  $('#r-title').textContent='Точность '+acc+'%';
-  $('#r-sub').textContent=acc===100?(G.manual?'Чисто. Попробуй с таймером или выключи счёт на экране.':(G.live?'Чисто. Выключи счёт на экране.':'Чисто. Пора в «Бегущий счёт».')):acc>=90?'Почти. Ещё пару заходов на этой скорости.':'Сбавь скорость, сначала нужна точность.';
-  $('#r-ans').previousElementSibling.textContent='Верно';$('#r-ans').textContent=k.ok+' / '+tot;
-  $('#r-real').previousElementSibling.textContent='Ошибок / пропусков';$('#r-real').textContent=k.bad+' / '+k.miss;
+  const ts=store.get('tapStats',{cards:0,ok:0,runs:0});ts.cards+=tot;ts.ok+=k.ok;ts.runs++;store.set('tapStats',ts);
+  ring(acc/100,acc+'%','точность');
+  $('#r-title').textContent=acc===100?'Идеально':acc>=90?'Почти идеально':acc>=75?'Неплохо':'Надо ещё';
+  $('#r-sub').textContent=acc===100?(G.manual?'Чисто. Включай таймер или убирай счёт с экрана.':(G.live?'Чисто. Теперь выключи счёт на экране.':'Чисто. Пора во вкладку «Счёт».')):acc>=90?'Ещё пару заходов на этой скорости.':'Сбавь скорость. Сначала точность, потом темп.';
+  $('#r-k1').textContent='Верно';$('#r-ans').textContent=k.ok+' / '+tot;
+  $('#r-k2').textContent='Ошибки · пропуски';$('#r-real').textContent=k.bad+' · '+k.miss;
   $('#r-time').textContent=t.toFixed(1)+'с';$('#r-spc').textContent=(t/G.n).toFixed(2);
-  $('#r-extra').classList.remove('hidden');$('#r-extra-txt').innerHTML='Итоговый бегущий счёт был <b style="color:var(--txt)">'+fmt(G.rc)+'</b>.';
+  $('#r-extra').classList.remove('hidden');$('#r-extra').innerHTML='Итоговый бегущий счёт: <b>'+(fmt(G.rc)||'0')+'</b>';
   $('#r-cls').classList.add('hidden');$('#r-checks').classList.add('hidden');
-  show('result');
+  showRes();
 }
 function showResult(ans,t){
-  $('#r-ans').previousElementSibling.textContent='Твой ответ';$('#r-real').previousElementSibling.textContent='Правильно';
   const ok=ans===G.rc;
   const st=store.get('stats',{runs:0,ok:0});st.runs++;if(ok)st.ok++;store.set('stats',st);
   let rec=false;
-  if(ok&&G.manual&&G.n===51&&G.per===1){const b=store.get('best51',null);if(b==null||t<b){store.set('best51',t);rec=b!=null||true}}
-  $('#r-ic').textContent=ok?'✅':'❌';
-  $('#r-title').textContent=ok?(rec?'Верно — новый рекорд!':'Верно'):'Мимо';
-  $('#r-sub').textContent=ok?(G.manual?(t/G.n<0.5?'Быстро. Пора на 2–3 карты за раз.':'Теперь то же самое, но быстрее.'):'Попробуй скорость выше или больше карт за раз.'):'Ошибся на '+Math.abs(ans-G.rc)+'. Сбавь темп и считай парами.';
-  $('#r-ans').textContent=fmt(ans);$('#r-real').textContent=fmt(G.rc);
+  if(ok&&G.manual&&G.n===51&&G.per===1){const b=store.get('best51',null);if(b==null||t<b){store.set('best51',t);rec=true}}
+  buzz(ok?[10,60,10]:[40,60,40]);
+  ring(ok?1:Math.max(0,1-Math.abs(ans-G.rc)/10),ok?'✓':'✗',ok?'верно':'мимо на '+Math.abs(ans-G.rc));
+  $('#r-title').textContent=ok?(rec?'Новый рекорд!':'В точку'):'Мимо';
+  $('#r-sub').textContent=ok?(G.manual?(t/G.n<0.5?'Быстро. Пора на 2–3 карты за раз.':'Теперь то же самое, только быстрее.'):'Подними скорость или клади больше карт за раз.'):'Ошибся на '+Math.abs(ans-G.rc)+'. Сбавь темп и считай парами.';
+  $('#r-k1').textContent='Твой ответ';$('#r-ans').textContent=fmt(ans)||'0';
+  $('#r-k2').textContent='Правильно';$('#r-real').textContent=fmt(G.rc)||'0';
   $('#r-time').textContent=t.toFixed(1)+'с';$('#r-spc').textContent=(t/G.n).toFixed(2);
-  // extra
-  let ex='';
-  const remCards=G.rest.length;
-  if(remCards===1){const c=G.rest[0];const v=hl(c.r);
-    ex=`Закрытая карта: <b style="color:var(--txt)">${c.r}${c.s}</b> (${fmt(v)}). Полная колода в сумме даёт 0, поэтому по счёту ${fmt(G.rc)} её можно вычислить: ${G.rc>0?'плюс значит, что осталась крупная':G.rc<0?'минус значит, что осталась мелкая':'ноль значит 7, 8 или 9'}.`}
-  else if(remCards>1){const d=remCards/52;const tc=Math.trunc(G.rc/d);
-    ex=`В шузе осталось ${d.toFixed(1).replace('.',',')} колоды → истинный счёт ${fmt(G.rc)} / ${d.toFixed(1).replace('.',',')} ≈ <b style="color:var(--txt)">${fmt(tc)}</b>. ${tc>=2?'Ставка: '+(tc-1)+' юнит(а).':'Ставь минималку.'}`}
-  $('#r-extra').classList.toggle('hidden',!ex);$('#r-extra-txt').innerHTML=ex;
+  let ex='';const rem=G.rest.length;
+  if(rem===1){const c=G.rest[0],v=hl(c.r);
+    ex=`Закрытая карта: <b>${c.r}${c.s}</b> (${fmt(v)||'0'}). Полная колода в сумме даёт 0, поэтому по счёту ${fmt(G.rc)||'0'} её можно было вычислить: ${G.rc>0?'плюс значит, что осталась крупная.':G.rc<0?'минус значит, что осталась мелкая.':'ноль значит 7, 8 или 9.'}`}
+  else if(rem>1){const d=rem/52,tc=Math.trunc(G.rc/d),ds=d.toFixed(1).replace('.',',');
+    ex=`Осталось ${ds} колоды → истинный счёт ${fmt(G.rc)||'0'} ÷ ${ds} ≈ <b>${fmt(tc)||'0'}</b>. ${tc>=2?'Ставка: <b>'+(tc-1)+'</b> юнит(а).':'Ставь минималку.'}`}
+  $('#r-extra').classList.toggle('hidden',!ex);$('#r-extra').innerHTML=ex;
   const k=G.cls,tot=k.ok+k.bad+k.miss;$('#r-cls').classList.toggle('hidden',!tot);
-  $('#r-cls-txt').innerHTML=tot?`<span class="ok">✓ ${k.ok}</span> · <span class="bad">✗ ${k.bad}</span>${k.miss?` · пропущено ${k.miss}`:''} · точность ${Math.round(k.ok/tot*100)}%`:'';
+  $('#r-cls').innerHTML=tot?`Кнопки: <span class="ok">✓ ${k.ok}</span> · <span class="bad">✗ ${k.bad}</span>${k.miss?' · пропущено '+k.miss:''}`:'';
   const cl=G.log;$('#r-checks').classList.toggle('hidden',!cl.length);
-  $('#r-checks-txt').innerHTML=cl.length?`${cl.filter(x=>x.ok).length} из ${cl.length} верно<br>`+cl.map(x=>`<span class="${x.ok?'ok':'bad'}">${x.ok?'✓':'✗'}</span> карта ${x.at}: ты ${fmt(x.ans)}, было ${fmt(x.real)}`).join('<br>'):'';
-  paintStats();show('result');
+  $('#r-checks').innerHTML=cl.length?`<b>Проверки: ${cl.filter(x=>x.ok).length} из ${cl.length}</b><br>`+cl.map(x=>`<span class="${x.ok?'ok':'bad'}">${x.ok?'✓':'✗'}</span> карта ${x.at}: ты ${fmt(x.ans)||'0'}, было ${fmt(x.real)||'0'}`).join('<br>'):'';
+  showRes();
 }
 $('#start').addEventListener('click',()=>startGame(false));
 $('#tstart').addEventListener('click',()=>startGame(true));
 $('#r-again').addEventListener('click',()=>startGame(!!(G&&G.tap)));
-$('#r-menu').addEventListener('click',()=>{G=null;show('menu')});
+$('#r-menu').addEventListener('click',quit);
 
 /* ---------- true count drill ---------- */
 let T=null;const tcSt={n:0,ok:0,streak:0};
 const tcKP=Keypad($('#tc-kp'),ans=>checkTC(ans));
-// tray marks
 (()=>{const tr=$('#tray');for(let i=1;i<6;i++){const m=document.createElement('div');m.className='tray-mark';m.style.bottom=(i/6*100)+'%';tr.appendChild(m)}})();
+const dstr=d=>String(d).replace('.',',');
 function newTC(){
-  const d=rand(1,11)/2; // 0.5..5.5 осталось
-  let rc=rand(-10,16);if(Math.random()<.25)rc=rand(2,9)*(Math.random()<.2?-1:1);
+  const d=rand(1,11)/2;let rc=rand(-10,16);if(Math.random()<.25)rc=rand(2,9)*(Math.random()<.2?-1:1);
   T={d,rc,done:false,id:Math.random()};
-  $('#tc-rc').textContent=fmt(rc);
-  $('#tc-d').textContent=S.hard?'?':String(d).replace('.',',');
-  $('#tray-fill').style.height=((6-d)/6*100)+'%';
-  $('#tc-exp').innerHTML='Дели бегущий счёт на оставшиеся колоды, округляй вниз (к нулю).';
-  tcKP.reset();
+  $('#tc-rc').textContent=fmt(rc)||'0';$('#tc-d').textContent=S.hard?'?':dstr(d);
+  $('#tray-fill').style.height=((6-d)/6*94)+'%';
+  $('#tc-exp').innerHTML='<span class="muted">Сколько будет истинный счёт?</span>';tcKP.reset();
 }
-function accepted(rc,d){const s=new Set([Math.trunc(rc/d),Math.round(rc/d)]);return s}
 function checkTC(ans){
-  if(!T)return;
-  if(T.done){newTC();return}
+  if(!T)return;if(T.done){newTC();return}
   const ds=S.hard?[T.d-.5,T.d,T.d+.5].filter(x=>x>0):[T.d];
-  const ok=ds.some(d=>accepted(T.rc,d).has(ans));
+  const ok=ds.some(d=>ans===Math.trunc(T.rc/d)||ans===Math.round(T.rc/d));
   const tc=Math.trunc(T.rc/T.d),raw=(T.rc/T.d).toFixed(2).replace('.',',');
-  tcSt.n++;if(ok){tcSt.ok++;tcSt.streak++}else tcSt.streak=0;
+  tcSt.n++;if(ok){tcSt.ok++;tcSt.streak++}else tcSt.streak=0;buzz(ok?8:[30,40,30]);
   const bet=tc>=2?`ставка ${tc-1} юнит(а)`:'ставка минимальная';
-  $('#tc-exp').innerHTML=`<span style="color:${ok?'var(--ok)':'var(--bad)'};font-weight:700">${ok?'✓ Верно':'✗ Неа'}</span> · ${fmt(T.rc)} / ${String(T.d).replace('.',',')} = ${raw} → <b>${fmt(tc)}</b><br><span style="color:var(--muted)">${S.hard?'было '+String(T.d).replace('.',',')+' колоды · ':''}${bet}${tc>=3?' · страховку брать':''}</span>`;
-  $('#tc-d').textContent=String(T.d).replace('.',',');
+  $('#tc-exp').innerHTML=`<span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'✓ Верно':'✗ Неа'}</span> · ${fmt(T.rc)||'0'} ÷ ${dstr(T.d)} = ${raw} → <b>${fmt(tc)||'0'}</b><br><span class="muted">${bet}${tc>=3?' · страховку брать':''}</span>`;
+  $('#tc-d').textContent=dstr(T.d);
   $('#tc-streak').textContent='Серия: '+tcSt.streak;$('#tc-acc').textContent='Точность: '+Math.round(tcSt.ok/tcSt.n*100)+'%';
-  T.done=true;const id=T.id;
-  setTimeout(()=>{if(T&&T.id===id)newTC()},ok?1300:2600);
+  T.done=true;const id=T.id;setTimeout(()=>{if(T&&T.id===id)newTC()},ok?1300:2600);
 }
 newTC();
+
+/* ---------- theory ---------- */
+$$('.acc-h').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('open')));
+const EX=[{r:'5',s:'♠'},{r:'K',s:'♥'},{r:'3',s:'♦'},{r:'2',s:'♣'},{r:'9',s:'♠'},{r:'A',s:'♦'},{r:'6',s:'♥'},{r:'4',s:'♣'},{r:'Q',s:'♠'},{r:'5',s:'♦'}];
+let exI=0;
+function exRender(){
+  let rc=0;EX.slice(0,exI).forEach(c=>rc+=hl(c.r));
+  $('#ex-cards').innerHTML=EX.map((c,i)=>i<exI?cardHTML(c,'48px',i<exI-1?'dim':''):'').join('')||'<span style="color:var(--muted);font-size:14px;align-self:center">Жми «Дальше», чтобы открыть карту</span>';
+  $('#ex-rc').textContent=fmt(rc)||'0';
+  const c=EX[exI-1];$('#ex-note').textContent=c?`${c.r}: ${fmt(hl(c.r))||'0'}`:'';
+  $('#ex-next').textContent=exI>=EX.length?'Сначала':'Дальше';
+}
+$('#ex-next').addEventListener('click',()=>{exI=exI>=EX.length?0:exI+1;exRender()});exRender();
+const BS={
+ hard:[['5–8','HHHHHHHHHH'],['9','HDDDDHHHHH'],['10','DDDDDDDDHH'],['11','DDDDDDDDDH'],['12','HHSSSHHHHH'],['13','SSSSSHHHHH'],['14','SSSSSHHHHH'],['15','SSSSSHHHHH'],['16','SSSSSHHHHH'],['17+','SSSSSSSSSS']],
+ soft:[['A,2','HHHDDHHHHH'],['A,3','HHHDDHHHHH'],['A,4','HHDDDHHHHH'],['A,5','HHDDDHHHHH'],['A,6','HDDDDHHHHH'],['A,7',['S','Ds','Ds','Ds','Ds','S','S','H','H','H']],['A,8','SSSSSSSSSS'],['A,9','SSSSSSSSSS']],
+ pairs:[['A,A','PPPPPPPPPP'],['10,10','SSSSSSSSSS'],['9,9','PPPPPSPPSS'],['8,8','PPPPPPPPPP'],['7,7','PPPPPPHHHH'],['6,6','PPPPPHHHHH'],['5,5','DDDDDDDDHH'],['4,4','HHHPPHHHHH'],['3,3','PPPPPPHHHH'],['2,2','PPPPPPHHHH']]
+};
+const LBL={H:'Б',S:'С',D:'Д',Ds:'Дс',P:'Р'};
+function bsRender(k){
+  let h='<div class="hd"></div>'+['2','3','4','5','6','7','8','9','10','A'].map(x=>`<div class="hd">${x}</div>`).join('');
+  BS[k].forEach(([name,acts])=>{const a=Array.isArray(acts)?acts:acts.split('');h+=`<div class="rh">${name}</div>`+a.map(x=>`<div class="${x}">${LBL[x]}</div>`).join('')});
+  $('#bs').innerHTML=h;
+}
+$('#bs-tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#bs-tabs button').forEach(x=>x.classList.toggle('on',x===b));bsRender(b.dataset.v)});
+bsRender('hard');
+
+/* ---------- strategy drill ---------- */
+const UPS=['2','3','4','5','6','7','8','9','10','A'];
+const cv=r=>r==='A'?11:['10','J','Q','K'].includes(r)?10:+r;
+const rs=()=>SUITS[rand(0,3)];
+const tenR=()=>['10','J','Q','K'][rand(0,3)];
+const ACT={H:'Взять',S:'Стоп',D:'Удвоить',P:'Сплит'};
+const DEV=[
+ {k:'h',t:16,u:'10',a:'S',tc:0},{k:'h',t:15,u:'10',a:'S',tc:4},{k:'h',t:12,u:'3',a:'S',tc:2},{k:'h',t:12,u:'2',a:'S',tc:3},
+ {k:'h',t:10,u:'10',a:'D',tc:4},{k:'h',t:10,u:'A',a:'D',tc:4},{k:'h',t:11,u:'A',a:'D',tc:1},{k:'h',t:9,u:'2',a:'D',tc:1},
+ {k:'h',t:9,u:'7',a:'D',tc:3},{k:'h',t:16,u:'9',a:'S',tc:5},{k:'p',t:20,u:'5',a:'P',tc:5},{k:'p',t:20,u:'6',a:'P',tc:4},
+ {k:'h',t:13,u:'2',a:'H',tc:-1,le:true},{k:'h',t:12,u:'4',a:'H',tc:-1,le:true},{k:'h',t:12,u:'5',a:'H',tc:-2,le:true},{k:'h',t:12,u:'6',a:'H',tc:-1,le:true}];
+let B=null;const bsSt=Object.assign({n:0,ok:0,streak:0,best:0,weak:{}},store.get('bsStats',{}));bsSt.streak=0;
+function hardPair(t){ // two non-pair, no-ace cards summing to t
+  const opts=[];for(let a=2;a<=10;a++){const b=t-a;if(b>=2&&b<=10&&a!==b)opts.push([a,b])}
+  const [a,b]=opts[rand(0,opts.length-1)];const r=x=>x===10?tenR():String(x);return [{r:r(a),s:rs()},{r:r(b),s:rs()}];
+}
+function genHand(mode){
+  if(mode==='all'){const x=Math.random();mode=x<.55?'hard':x<.78?'soft':'pairs'}
+  if(mode==='hard'){const t=[5,6,7,8,9,9,10,10,11,11,12,12,12,13,13,14,14,15,15,16,16,16,17,18,19][rand(0,24)];return {kind:'h',cards:hardPair(t)}}
+  if(mode==='soft'){const x=rand(2,9);return {kind:'s',cards:[{r:'A',s:rs()},{r:String(x),s:rs()}]}}
+  const r=['A','2','3','4','5','6','7','8','9','10'][rand(0,9)];
+  return {kind:'p',cards:r==='10'?[{r:tenR(),s:rs()},{r:tenR(),s:rs()}]:[{r,s:rs()},{r,s:rs()}]};
+}
+function baseAct(h,up){
+  const ui=UPS.indexOf(up),c=h.cards;let row,acts;
+  if(h.kind==='p'){const v=cv(c[0].r);row={11:'A,A',10:'10,10'}[v]||`${v},${v}`;acts=BS.pairs.find(x=>x[0]===row)[1]}
+  else if(h.kind==='s'){row='A,'+c[1].r;acts=BS.soft.find(x=>x[0]===row)[1]}
+  else{const t=cv(c[0].r)+cv(c[1].r);row=t<=8?'5–8':t>=17?'17+':String(t);acts=BS.hard.find(x=>x[0]===row)[1]}
+  let a=Array.isArray(acts)?acts[ui]:acts[ui];if(a==='Ds')a='D';return {a,row};
+}
+function total(h){const t=h.cards.reduce((s,c)=>s+cv(c.r),0);return h.kind==='p'&&cv(h.cards[0].r)===11?12:(h.kind==='s'?t:t)}
+function reason(h,up,a,dev){
+  if(dev)return `Отклонение: при истинном ${dev.le?'≤ '+fmt(dev.tc):'≥ '+(fmt(dev.tc)||'0')} ${ACT[dev.a].toLowerCase()}, иначе по таблице.`;
+  const u=cv(up),weak=u>=2&&u<=6,t=total(h);
+  if(h.kind==='p'){const v=cv(h.cards[0].r);
+    if(v===11)return 'Тузы сплитуются всегда.';if(v===8)return 'Восьмёрки сплитуются всегда: 16 — худшая рука.';
+    if(v===10)return 'Двадцать не ломают. Стоп.';if(v===5)return 'Две пятёрки — это 10. Играй как 10, а не как пару.';
+    if(v===4)return 'Пару 4 сплитуешь только против 5–6.';if(v===9)return 'Девятки сплитуешь против 2–9, кроме 7. Против 7, 10 и туза 18 и так хорошо.';
+    return a==='P'?'Против слабого дилера пару сплитуешь, чтобы выжать из него больше.':'Против сильной карты дилера пару не сплитуешь, а добираешь.'}
+  if(h.kind==='s'){if(t>=19)return 'Мягкие 19–20 — стоп всегда.';
+    if(a==='D')return 'Мягкая рука не может перебрать, поэтому против слабого дилера удваиваешь.';
+    if(t===18)return a==='S'?'Мягкие 18 против 2, 7, 8 — стоп.':'Мягкие 18 против 9, 10, туза — берёшь: 18 тут мало.';
+    return 'Мягкую руку нельзя перебрать одной картой, так что добирай смело.'}
+  if(t>=17)return '17 и больше — всегда стоп.';
+  if(t<=8)return 'До 8 включительно — всегда берёшь.';
+  if(t===11)return u===11?'11 против туза — просто берёшь.':'11 — лучшая рука для удвоения.';
+  if(t===10)return a==='D'?'10 удваиваешь, если у дилера не 10 и не туз.':'10 против 10 или туза — просто берёшь.';
+  if(t===9)return a==='D'?'9 удваиваешь только против 3–6.':'9 удваиваешь только против 3–6, здесь берёшь.';
+  if(t===12&&(u===2||u===3))return '12 против 2–3 — исключение: берёшь.';
+  return weak?'Дилер слабый (2–6) и часто перебирает. Не рискуй, стой.':'У дилера сильная карта (7–A): с 12–16 ты проигрываешь, если стоишь. Добирай.';
+}
+function newBS(){
+  const dev=S.dev&&Math.random()<.6?DEV[rand(0,DEV.length-1)]:null;
+  let h,up;
+  if(dev){up=dev.u;h=dev.k==='p'?{kind:'p',cards:[{r:tenR(),s:rs()},{r:tenR(),s:rs()}]}:{kind:'h',cards:hardPair(dev.t)}}
+  else{h=genHand(S.bsmode);up=UPS[rand(0,9)]}
+  if(dev&&S.bsmode!=='all'&&!((S.bsmode==='hard'&&dev.k==='h')||(S.bsmode==='pairs'&&dev.k==='p')))return newBSPlain();
+  setupBS(h,up,dev);
+}
+function newBSPlain(){setupBS(genHand(S.bsmode),UPS[rand(0,9)],null)}
+function setupBS(h,up,dev){
+  const tc=S.dev?(dev?dev.tc+rand(-2,2):rand(-3,6)):null;
+  let {a,row}=baseAct(h,up);let usedDev=null;
+  if(S.dev){const d=DEV.find(x=>x.u===up&&((x.k==='p'&&h.kind==='p'&&cv(h.cards[0].r)===10)||(x.k==='h'&&h.kind==='h'&&x.t===total(h))));
+    if(d&&(d.le?tc<=d.tc:tc>=d.tc)){a=d.a;usedDev=d}else if(d)usedDev=null;
+    B={h,up,a,row,tc,dev:usedDev,devAny:d,done:false,id:Math.random()}}
+  else B={h,up,a,row,tc:null,dev:null,done:false,id:Math.random()};
+  const ur=up==='10'?tenR():up;
+  $('#bs-dealer').innerHTML=cardHTML({r:ur,s:rs()},'')+'<div class="pc back"></div>';
+  $('#bs-player').innerHTML=h.cards.map(c=>cardHTML(c,'')).join('');
+  const t=total(h);
+  $('#bs-tot').innerHTML=h.kind==='p'?`Пара · <span>${cv(h.cards[0].r)===11?'тузы':cv(h.cards[0].r)===10?'десятки':h.cards[0].r+'-ки'}</span>`:h.kind==='s'?`Мягкие <span>${t}</span>`:`Жёсткие <span>${t}</span>`;
+  $('#bs-tc').classList.toggle('hidden',!S.dev);if(S.dev)$('#bs-tc').textContent='Истинный '+(fmt(tc)||'0');
+  $('#act-split')&&0;$$('#acts .act').forEach(b=>{b.classList.remove('right','bad');b.disabled=b.dataset.a==='P'&&h.kind!=='p'});
+  $('#bs-fb').innerHTML='<span class="muted">Что делаешь?</span>';
+}
+function answerBS(x){
+  if(!B)return;if(B.done){newBS();return}
+  B.done=true;const ok=x===B.a;bsSt.n++;
+  if(ok){bsSt.ok++;bsSt.streak++;bsSt.best=Math.max(bsSt.best,bsSt.streak);buzz(8)}
+  else{bsSt.streak=0;buzz([30,40,30]);const key=(B.h.kind==='p'?'Пара '+B.row:B.h.kind==='s'?'Мягкие '+B.row:'Жёсткие '+B.row)+' vs '+B.up;bsSt.weak[key]=(bsSt.weak[key]||0)+1}
+  store.set('bsStats',{n:bsSt.n,ok:bsSt.ok,best:bsSt.best,weak:bsSt.weak});
+  $$('#acts .act').forEach(b=>{if(b.dataset.a===B.a)b.classList.add('right');else if(b.dataset.a===x)b.classList.add('bad')});
+  $('#bs-fb').innerHTML=`<span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'✓ Верно':'✗ Правильно: '+ACT[B.a]}</span><br><span class="muted">${reason(B.h,B.up,B.a,B.dev)}</span>`;
+  paintBS();const id=B.id;setTimeout(()=>{if(B&&B.id===id&&view==='bs')newBS()},ok?900:3200);
+}
+function paintBS(){
+  $('#bs-streak').textContent='Серия: '+bsSt.streak;$('#bs-best').textContent='Рекорд: '+bsSt.best;
+  $('#bs-acc').textContent='Точность: '+(bsSt.n?Math.round(bsSt.ok/bsSt.n*100)+'%':'—');
+  const w=Object.entries(bsSt.weak).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  $('#bs-weak').innerHTML=w.length?w.map(([k,v])=>`<div class="w"><b>${k}</b><span>×${v}</span></div>`).join('')+'<button class="btn2" id="bs-reset" style="margin-top:6px;padding:10px;font-size:13px">Сбросить</button>':'<span style="color:var(--muted);font-size:14px">Пока чисто. Ошибки будут копиться здесь.</span>';
+  const r=$('#bs-reset');r&&r.addEventListener('click',()=>{bsSt.weak={};store.set('bsStats',{n:bsSt.n,ok:bsSt.ok,best:bsSt.best,weak:{}});paintBS()});
+}
+$$('#acts .act').forEach(b=>b.addEventListener('click',()=>answerBS(b.dataset.a)));
+$('#felt').addEventListener('click',()=>{if(B&&B.done)newBS()});
+newBS();paintBS();
+
+go(store.get('view','tap'));
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
