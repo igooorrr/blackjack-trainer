@@ -201,6 +201,60 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .weak .w{display:flex;align-items:center;gap:10px;font-size:14px}
 .weak .w b{flex:1}
 .weak .w span{color:var(--red);font-weight:800}
+/* game */
+.subseg{margin:-4px 0 16px}
+#game{padding-left:10px;padding-right:10px;--cw:min(19vw,82px)}
+.gtop{display:flex;align-items:center;gap:8px}
+.bank{font-weight:800;font-size:15px}
+.shoe{margin-left:auto;position:relative;width:40px;height:52px;flex:none}
+.shoe i{position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(45deg,#8e1d24 0 4px,#a8272f 4px 8px);border:2px solid #fbfaf6;transform:rotate(8deg);box-shadow:2px 2px 0 #ddd,4px 4px 0 #bbb,0 6px 14px rgba(0,0,0,.5)}
+.shoe b{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;background:rgba(0,0,0,.6);padding:1px 6px;border-radius:6px;white-space:nowrap}
+.cnt{font-size:13px}
+.garea{display:flex;flex-direction:column;align-items:center}
+.glabel{font-size:10px;font-weight:800;letter-spacing:1.6px;color:rgba(255,255,255,.5);text-transform:uppercase;margin:10px 0 6px}
+.ghand{display:flex;justify-content:center;min-height:calc(var(--cw)*1.4);padding-left:calc(var(--cw)*.0)}
+.ghand .pc{--w:var(--cw);animation:none;flex:none}
+.ghand .pc+.pc{margin-left:calc(var(--cw)*-.58)}
+.tb2{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);border-radius:99px;padding:4px 11px;font-weight:800;font-size:14px;margin-top:7px;min-height:26px}
+.tb2:empty{visibility:hidden}
+.gmid{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:40px}
+.gmsg{font-family:"Playfair Display",serif;font-size:30px;font-weight:800;color:var(--gold);text-shadow:0 6px 20px rgba(0,0,0,.5);text-align:center;animation:pop .35s ease}
+.phands{display:flex;justify-content:center;gap:8px;width:100%}
+.phand{display:flex;flex-direction:column;align-items:center;padding:6px 6px 8px;border-radius:18px;transition:background .2s,box-shadow .2s;min-width:0}
+.phand.active{background:rgba(240,199,94,.1);box-shadow:0 0 0 2px rgba(240,199,94,.55)}
+.phand .meta{display:flex;align-items:center;gap:6px;margin-top:6px}
+.chip{width:var(--cs,40px);height:var(--cs,40px);border-radius:50%;display:grid;place-items:center;font-size:calc(var(--cs,40px)*.3);font-weight:800;color:#fff;position:relative;flex:none;
+  background:radial-gradient(circle at 50% 50%,var(--cc) 0 52%,#fff 53% 56%,var(--cc) 57%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.0),0 4px 10px rgba(0,0,0,.45)}
+.chip::before{content:"";position:absolute;inset:2px;border-radius:50%;border:3px dashed rgba(255,255,255,.75)}
+.chip span{position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.betamt{font-weight:800;font-size:14px}
+.res{font-weight:800;font-size:12px;padding:3px 9px;border-radius:99px;margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+.res.win{background:var(--green);color:#052a14}.res.lose{background:var(--red);color:#fff}.res.push{background:#7f8b85;color:#fff}.res.bj{background:var(--gold);color:#2a1d02}
+.betspot{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 0 6px}
+.betcircle{width:96px;height:96px;border-radius:50%;border:2px dashed rgba(240,199,94,.55);display:grid;place-items:center;position:relative}
+.betcircle .chip{--cs:62px}
+.betspot .betamt{font-size:22px}
+.gctl{padding-top:10px;min-height:150px}
+.chips{display:flex;justify-content:center;gap:12px;margin-bottom:12px}
+.chips button .chip{--cs:56px}
+.chips button:active{transform:scale(.92)}
+.chips button[disabled]{opacity:.3}
+.gctl .row2{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.gctl .cta{margin:0;padding:16px}
+.gctl .cta[disabled]{opacity:.4}
+.ghint{text-align:center;font-size:13px;color:rgba(255,255,255,.7);margin-bottom:10px;font-weight:600;min-height:18px}
+.gtoast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(10,10,10,.85);border:1px solid rgba(255,93,98,.5);border-radius:16px;padding:10px 14px;font-size:14px;line-height:1.4;font-weight:600;width:min(92%,380px);text-align:center;z-index:5;animation:pop .25s}
+.gtoast b{color:var(--red)}
+.flyer{position:fixed;z-index:80;pointer-events:none}
+.float{position:absolute;font-weight:800;font-size:22px;animation:floatup 1.2s ease forwards;pointer-events:none;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+@keyframes floatup{from{transform:translateY(0);opacity:1}to{transform:translateY(-50px);opacity:0}}
+.sum{background:linear-gradient(180deg,#163224,#0d1f17);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:14px;max-height:46vh;overflow-y:auto;animation:up .3s}
+.sum h4{font-size:24px;font-weight:800;text-align:center}
+.sum .ln{font-size:14px;line-height:1.45;padding:8px 0;border-top:1px solid var(--line)}
+.sum .ln:first-of-type{border-top:0}
+.sum .ok{color:var(--green);font-weight:800}.sum .bad{color:var(--red);font-weight:800}
+.sum .muted{color:var(--muted)}
+.sum .cta{margin-top:10px}
 /* theory */
 .acc{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .acc+.acc{margin-top:10px}
@@ -259,6 +313,28 @@ ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px 
 </head>
 <body>
 
+<!-- ============ GAME ============ -->
+<main class="view hidden" id="v-game">
+  <div class="eyebrow">Hi-Lo тренажёр</div>
+  <h1 class="title">Игра</h1>
+  <p class="lead">Настоящий стол: ставишь фишками, считаешь, играешь по стратегии. После каждой раздачи — разбор ошибок.</p>
+  <div class="hero" style="background:radial-gradient(120% 140% at 100% 0%,#8a1f2b 0%,#4a0f17 45%,#1d070a 100%)">
+    <div class="hero-cards"><div class="mini" style="right:44px;top:12px;transform:rotate(-12deg)">A</div><div class="mini" style="right:10px;top:0;transform:rotate(9deg)">K</div></div>
+    <h2>Банк <span id="hg-bank" class="num">$1000</span></h2>
+    <p>Минималка $10. Ставь больше, когда счёт в плюсе.</p>
+    <div class="stats"><div class="stat"><b id="hg-hands">0</b><span>раздач</span></div><div class="stat"><b id="hg-acc">—</b><span>верных ходов</span></div><div class="stat"><b id="hg-net">$0</b><span>итог</span></div></div>
+  </div>
+  <div class="section-h">Настройки</div>
+  <div class="group">
+    <div class="row tg" data-key="ghint"><div class="t">Подсказка сразу<small>Если ошибся, сразу покажет правильный ход</small></div><div class="sw"></div></div>
+    <div class="row tg" data-key="gdev"><div class="t">Отклонения по счёту<small>Правильный ход учитывает истинный счёт</small></div><div class="sw"></div></div>
+    <div class="row tg" data-key="gquiz"><div class="t">Проверка счёта<small>Каждые 5 раздач спросит бегущий счёт</small></div><div class="sw"></div></div>
+    <div class="row"><div class="t">Банк<small>Вернуть $1000 и обнулить статистику</small></div><button class="pill" id="g-reset" style="background:var(--s3)">Сбросить</button></div>
+  </div>
+  <button class="cta" id="gstart"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>За стол</button>
+  <p class="foot">6 колод · дилер стоит на мягких 17 · блэкджек 3:2 · удвоение после сплита · перемешивание после 75% шуза</p>
+</main>
+
 <!-- ============ TAP ============ -->
 <main class="view" id="v-tap">
   <div class="eyebrow">Hi-Lo тренажёр</div>
@@ -285,6 +361,8 @@ ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px 
 <main class="view hidden" id="v-run">
   <div class="eyebrow">Hi-Lo тренажёр</div>
   <h1 class="title">Бегущий счёт</h1>
+  <div class="seg subseg"><button data-go="run" class="on">Бегущий</button><button data-go="tc">Истинный</button></div>
+
   <p class="lead">Держи счёт в голове и назови его в конце. Как в казино, только без охраны.</p>
   <div class="hero" style="background:radial-gradient(120% 140% at 100% 0%,#7a5a1f 0%,#3f2f0f 45%,#1a1408 100%)">
     <div class="hero-cards"><div class="mini" style="right:44px;top:12px;transform:rotate(-12deg)">A</div><div class="mini r" style="right:10px;top:0;transform:rotate(9deg)">3</div></div>
@@ -310,6 +388,8 @@ ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px 
 <main class="view hidden" id="v-tc">
   <div class="eyebrow">Hi-Lo тренажёр</div>
   <h1 class="title">Истинный счёт</h1>
+  <div class="seg subseg"><button data-go="run">Бегущий</button><button data-go="tc" class="on">Истинный</button></div>
+
   <p class="lead">Бегущий счёт делишь на число оставшихся колод и округляешь вниз.</p>
   <div class="card">
     <div class="tc-card">
@@ -453,9 +533,9 @@ ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px 
 
 <!-- ============ TAB BAR ============ -->
 <nav class="tabbar"><div class="in">
-  <button class="tb on" data-view="tap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 14.5a1.6 1.6 0 0 1 2.6-1.9L9 15.5"/></svg>Тыкалка</button>
+  <button class="tb" data-view="game"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.1 2.1M15.9 15.9L18 18M6 18l2.1-2.1M15.9 8.1L18 6"/></svg>Игра</button>
+  <button class="tb" data-view="tap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 14.5a1.6 1.6 0 0 1 2.6-1.9L9 15.5"/></svg>Тыкалка</button>
   <button class="tb" data-view="run"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="5" width="11" height="15" rx="2" transform="rotate(-8 9 12.5)"/><rect x="9.5" y="4" width="11" height="15" rx="2" transform="rotate(8 15 11.5)"/></svg>Счёт</button>
-  <button class="tb" data-view="tc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="6" r="1.3" fill="currentColor"/><circle cx="12" cy="18" r="1.3" fill="currentColor"/><path d="M5 12h14"/></svg>Истинный</button>
   <button class="tb" data-view="bs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><path d="M14 17l2 2 4-4" stroke-linecap="round"/></svg>Стратегия</button>
   <button class="tb" data-view="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>Теория</button>
 </div></nav>
@@ -472,6 +552,20 @@ ul.ck li.no::before{background:rgba(255,93,98,.18);box-shadow:inset 0 0 0 1.5px 
   <div class="prog"><i id="p-prog"></i></div>
   <div class="table" id="table"></div>
   <div class="vbtns" id="vbtns"><button class="vb m" data-val="-1">−1</button><button class="vb z" data-val="0">0</button><button class="vb p" data-val="1">+1</button></div>
+</section>
+
+<!-- ============ GAME SCREEN ============ -->
+<section class="screen hidden" id="game">
+  <div class="gtop">
+    <button class="iconbtn" id="g-close" aria-label="Выйти"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="pill bank num" id="g-bank">$1000</div>
+    <button class="pill cnt num" id="g-eye">👁 Счёт</button>
+    <div class="shoe" id="g-shoe"><i></i><b id="g-left">6.0</b></div>
+  </div>
+  <div class="garea"><div class="glabel">Дилер</div><div class="ghand" id="g-dealer"></div><div class="tb2 num" id="g-dtot"></div></div>
+  <div class="gmid" id="g-mid"><svg class="arc" viewBox="0 0 400 200" style="opacity:.16"><defs><path id="ap2" d="M30 170 Q200 30 370 170"/></defs><text fill="#f0c75e" font-family="Playfair Display,serif" font-size="17" font-weight="700" letter-spacing="3"><textPath href="#ap2" startOffset="50%" text-anchor="middle">DEALER STANDS ON ALL 17s</textPath></text></svg><div id="g-msg"></div></div>
+  <div class="garea" id="g-player"></div>
+  <div class="gctl" id="g-ctl"></div>
 </section>
 
 <!-- ============ RESULT ============ -->
@@ -508,7 +602,7 @@ const fmt=n=>(n>0?'+':n<0?'−':'')+Math.abs(n);
 const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
 const store={get(k,d){try{const v=localStorage.getItem('cc_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('cc_'+k,JSON.stringify(v))}catch(e){}}};
-let S=Object.assign({n:'51',per:'1',speed:'0',checks:false,hard:false,tn:'20',tspeed:'0',live:true,bsmode:'all',dev:false},store.get('settings',{}));
+let S=Object.assign({n:'51',per:'1',speed:'0',checks:false,hard:false,tn:'20',tspeed:'0',live:true,bsmode:'all',dev:false,ghint:true,gdev:true,gquiz:true},store.get('settings',{}));
 const saveS=()=>store.set('settings',S);
 
 /* ---------- keypad ---------- */
@@ -543,11 +637,12 @@ document.addEventListener('keydown',e=>{
 /* ---------- navigation ---------- */
 let view='tap';
 function go(v){
-  view=v;['tap','run','tc','bs','learn'].forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
-  $$('.tb').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  view=v;['game','tap','run','tc','bs','learn'].forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
+  $$('.tb').forEach(b=>b.classList.toggle('on',b.dataset.view===v||(b.dataset.view==='run'&&v==='tc')));
   activeKP=v==='tc'?tcKP:null;window.scrollTo(0,0);store.set('view',v);
 }
 $$('.tb').forEach(b=>b.addEventListener('click',()=>{buzz(5);go(b.dataset.view)}));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 $$('[data-set]').forEach(seg=>{
   const key=seg.dataset.set;
   const paint=()=>seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S[key]));
@@ -856,7 +951,242 @@ $$('#acts .act').forEach(b=>b.addEventListener('click',()=>answerBS(b.dataset.a)
 $('#felt').addEventListener('click',()=>{if(B&&B.done)newBS()});
 newBS();paintBS();
 
-go(store.get('view','tap'));
+/* ---------- full game ---------- */
+const GR={decks:6,pen:.75,unit:10,maxBet:1000};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const CHIPC={10:'#2f6fd6',25:'#1f9d55',100:'#1b1b1b',500:'#7b3fc4'};
+const chipHTML=(v,cs)=>{const c=v>=500?CHIPC[500]:v>=100?CHIPC[100]:v>=25?CHIPC[25]:CHIPC[10];return `<div class="chip" style="--cc:${c};${cs?'--cs:'+cs:''}"><span>${v>=1000?Math.round(v/100)/10+'k':v}</span></div>`};
+const money=v=>(v<0?'−$':'$')+Math.abs(Math.round(v*100)/100);
+let GM={shoe:[],pos:0,rc:0,cut:0,bank:store.get('bank',1000),bet:store.get('lastBet',10),phase:'idle',hands:[],act:0,dealer:[],eye:false,rounds:0,dec:[],ins:0,betTC:0,busy:false};
+let GS=Object.assign({hands:0,dec:0,ok:0,net:0},store.get('gStats',{}));
+function paintGameHero(){
+  $('#hg-bank').textContent=money(GM.bank);$('#hg-hands').textContent=GS.hands;
+  $('#hg-acc').textContent=GS.dec?Math.round(GS.ok/GS.dec*100)+'%':'—';
+  const n=$('#hg-net');n.textContent=(GS.net>0?'+':'')+money(GS.net);n.style.color=GS.net>0?'var(--green)':GS.net<0?'var(--red)':'';
+}
+paintGameHero();
+function gShuffle(){
+  let a=[];for(let d=0;d<GR.decks;d++)for(const s of SUITS)for(const r of RANKS)a.push({r,s});
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  GM.shoe=a;GM.pos=0;GM.rc=0;GM.cut=Math.floor(a.length*GR.pen);
+}
+const decksLeft=()=>(GM.shoe.length-GM.pos)/52;
+const curTC=()=>Math.trunc(GM.rc/Math.max(decksLeft(),.5));
+function hv(cards){let t=0,a=0;cards.forEach(c=>{const v=cv(c.r);t+=v===11?1:v;if(v===11)a++});const soft=a>0&&t+10<=21;return {t:soft?t+10:t,soft}}
+function updTop(){
+  $('#g-bank').textContent=money(GM.bank);$('#g-left').textContent=decksLeft().toFixed(1);
+  $('#g-eye').textContent=GM.eye?`RC ${fmt(GM.rc)||'0'} · TC ${fmt(curTC())||'0'}`:'👁 Счёт';
+}
+$('#g-eye').addEventListener('click',()=>{GM.eye=!GM.eye;updTop();if(GM.phase==='bet')renderCtl()});
+function seen(c){GM.rc+=hl(c.r);updTop()}
+function draw(){return GM.shoe[GM.pos++]}
+function shoeXY(){const r=$('#g-shoe').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}}
+function animIn(el){
+  const o=shoeXY(),r=el.getBoundingClientRect();const dx=o.x-(r.left+r.width/2),dy=o.y-(r.top+r.height/2);
+  try{el.animate([{transform:`translate(${dx}px,${dy}px) rotate(-25deg) scale(.45)`,opacity:.7},{transform:'none',opacity:1}],{duration:340,easing:'cubic-bezier(.2,.85,.3,1.05)'})}catch(e){}
+}
+function cardEl(c,down){const w=document.createElement('div');w.innerHTML=down?'<div class="pc back"></div>':cardHTML(c,'');return w.firstElementChild}
+async function dealTo(container,c,down,anim=true){const el=cardEl(c,down);container.appendChild(el);if(anim){animIn(el);buzz(4);await sleep(300)}return el}
+function msg(t,ms=1100){const m=$('#g-msg');m.innerHTML=`<div class="gmsg">${t}</div>`;if(ms)setTimeout(()=>{if(m.textContent===t.replace(/<[^>]+>/g,''))m.innerHTML=''},ms)}
+function toast(html){const t=document.createElement('div');t.className='gtoast';t.innerHTML=html;$('#g-mid').appendChild(t);setTimeout(()=>t.remove(),2600)}
+
+/* --- rendering --- */
+function cwFor(n){return n<=1?'min(19vw,82px)':n===2?'min(15vw,66px)':'min(11vw,50px)'}
+function renderHands(){
+  const P=$('#g-player');P.style.setProperty('--cw',cwFor(GM.hands.length));$('#game').style.setProperty('--cw',cwFor(1));
+  P.innerHTML='<div class="glabel">Ты</div><div class="phands" style="--cw:'+cwFor(GM.hands.length)+'"></div>';
+  const wrap=P.querySelector('.phands');
+  GM.hands.forEach((h,i)=>{
+    const d=document.createElement('div');d.className='phand'+(GM.phase==='play'&&i===GM.act?' active':'');
+    d.innerHTML=`<div class="ghand"></div><div class="tb2 num"></div><div class="meta">${chipHTML(h.bet,'28px')}<span class="betamt num">${money(h.bet)}</span></div>${h.res?`<div class="res ${h.res[0]}">${h.res[1]}</div>`:''}`;
+    const hc=d.querySelector('.ghand');h.cards.forEach(c=>hc.appendChild(cardEl(c,false)));h.el=d;wrap.appendChild(d);updHand(i);
+  });
+}
+function updHand(i){const h=GM.hands[i];if(!h||!h.el)return;const v=hv(h.cards);h.el.querySelector('.tb2').textContent=h.cards.length?(v.soft&&v.t<21?`${v.t-10}/${v.t}`:v.t):'';
+  h.el.querySelector('.betamt').textContent=money(h.bet);h.el.querySelector('.chip').outerHTML=chipHTML(h.bet,'28px')}
+function setActive(){GM.hands.forEach((h,i)=>h.el&&h.el.classList.toggle('active',GM.phase==='play'&&i===GM.act&&GM.hands.length>1))}
+function updDealer(showAll){const cs=showAll?GM.dealer:GM.dealer.slice(0,1);$('#g-dtot').textContent=cs.length?hv(cs).t:''}
+function renderBetSpot(){
+  const P=$('#g-player');P.innerHTML=`<div class="glabel">Ставка</div><div class="betspot"><div class="betcircle" id="g-spot">${GM.bet?chipHTML(GM.bet):''}</div><div class="betamt num">${money(GM.bet)}</div></div>`;
+}
+function renderCtl(){
+  const C=$('#g-ctl');
+  if(GM.phase==='bet'){
+    const tc=curTC(),rec=Math.max(1,tc-1)*GR.unit;
+    C.innerHTML=`<div class="ghint">${GM.eye?`По счёту (TC ${fmt(tc)||'0'}) ставь ${money(rec)}`:'Поставь фишки и раздавай'}</div>
+      <div class="chips">${[10,25,100,500].map(v=>`<button data-chip="${v}" ${GM.bet+v>Math.min(GM.bank,GR.maxBet)?'disabled':''}>${chipHTML(v)}</button>`).join('')}</div>
+      <div class="row2"><button class="btn2" id="g-clear">Очистить</button><button class="cta" id="g-deal" ${GM.bet<GR.unit||GM.bet>GM.bank?'disabled':''}>Раздать ${money(GM.bet)}</button></div>`;
+    C.querySelectorAll('[data-chip]').forEach(b=>b.addEventListener('click',()=>addChip(+b.dataset.chip,b)));
+    $('#g-clear').addEventListener('click',()=>{GM.bet=0;renderBetSpot();renderCtl()});
+    $('#g-deal').addEventListener('click',deal);
+  }else if(GM.phase==='play'){
+    const h=GM.hands[GM.act],two=h.cards.length===2,canD=two&&GM.bank>=h.bet&&!h.sa,canP=canSplit(h);
+    C.innerHTML=`<div class="acts" style="margin-top:0"><button class="act H" data-a="H">Взять</button><button class="act S" data-a="S">Стоп</button><button class="act D" data-a="D" ${canD?'':'disabled'}>Удвоить</button><button class="act P" data-a="P" ${canP?'':'disabled'}>Сплит</button></div>`;
+    C.querySelectorAll('.act').forEach(b=>b.addEventListener('click',()=>act(b.dataset.a)));
+  }else if(GM.phase==='ins'){
+    C.innerHTML=`<div class="ghint">У дилера туз. Страховка за ${money(GM.hands[0].bet/2)}?</div><div class="acts" style="margin-top:0"><button class="act S" data-i="0">Нет</button><button class="act D" data-i="1">Да</button></div>`;
+    C.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>GM.insResolve&&GM.insResolve(b.dataset.i==='1')));
+  }else C.innerHTML='';
+}
+function addChip(v,btn){
+  if(GM.bet+v>Math.min(GM.bank,GR.maxBet))return;
+  const r=btn.getBoundingClientRect(),t=$('#g-spot').getBoundingClientRect();
+  const f=document.createElement('div');f.className='flyer';f.innerHTML=chipHTML(v,'56px');f.style.left=r.left+'px';f.style.top=r.top+'px';document.body.appendChild(f);
+  buzz(6);
+  try{const a=f.animate([{transform:'none'},{transform:`translate(${t.left+t.width/2-r.left-28}px,${t.top+t.height/2-r.top-28}px) scale(1.1)`}],{duration:260,easing:'cubic-bezier(.3,.8,.3,1)'});a.onfinish=()=>f.remove()}catch(e){f.remove()}
+  GM.bet+=v;setTimeout(()=>{renderBetSpot();renderCtl()},230);
+}
+
+/* --- strategy for any hand --- */
+function canSplit(h){return h.cards.length===2&&cv(h.cards[0].r)===cv(h.cards[1].r)&&GM.hands.length<4&&GM.bank>=h.bet&&!h.sa}
+function bestAct(h,up,tc){up=cv(up)===10?'10':up;
+  const ui=UPS.indexOf(up),two=h.cards.length===2,canD=two&&!h.sa,v=hv(h.cards);
+  let a,row,kind;
+  if(two&&cv(h.cards[0].r)===cv(h.cards[1].r)&&GM.hands.length<4){const pv=cv(h.cards[0].r);row={11:'A,A',10:'10,10'}[pv]||`${pv},${pv}`;const pa=BS.pairs.find(x=>x[0]===row)[1].split('')[ui];if(pa==='P'){a='P';kind='p'}}
+  if(!a){
+    if(v.soft&&v.t<21&&v.t>=13){kind='s';row='A,'+(v.t-11);const ac=BS.soft.find(x=>x[0]===row)[1];a=Array.isArray(ac)?ac[ui]:ac[ui]}
+    else if(v.soft&&v.t<13){kind='s';a='H';row='A,'+(v.t-11)}
+    else{kind='h';row=v.t<=8?'5–8':v.t>=17?'17+':String(v.t);a=BS.hard.find(x=>x[0]===row)[1][ui]}
+  }
+  let nod=false;
+  if(a==='Ds'){a=canD?'D':'S';nod=!canD}else if(a==='D'&&!canD){a='H';nod=true}
+  let dev=null;
+  if(S.gdev){
+    const pairT=two&&cv(h.cards[0].r)===10&&cv(h.cards[1].r)===10;
+    const d=DEV.find(x=>x.u===up&&((x.k==='p'&&pairT)||(x.k==='h'&&!v.soft&&x.t===v.t&&!(two&&cv(h.cards[0].r)===cv(h.cards[1].r)&&x.t===16))));
+    if(d&&(d.le?tc<=d.tc:tc>=d.tc)&&!(d.a==='D'&&!canD)){a=d.a;dev=d}
+  }
+  return {a,dev,nod,kind,t:v.t,soft:v.soft};
+}
+function handDesc(h){const v=hv(h.cards);if(h.cards.length===2&&cv(h.cards[0].r)===cv(h.cards[1].r))return 'Пара '+(cv(h.cards[0].r)===11?'тузов':cv(h.cards[0].r)===10?'десяток':h.cards[0].r);return (v.soft?'Мягкие ':'')+v.t}
+function gReason(h,up,b){
+  if(b.dev)return reason(null,up,b.a,b.dev);
+  if(b.nod)return b.a==='H'?'Удвоить уже нельзя (карт больше двух), поэтому просто берёшь.':'Удвоить уже нельзя, поэтому стоп.';
+  const two=h.cards.length===2;
+  if(two&&cv(h.cards[0].r)===cv(h.cards[1].r))return reason({kind:'p',cards:h.cards},up,b.a,null);
+  if(b.soft&&b.t>=13&&b.t<=20)return reason({kind:'s',cards:[{r:'A'},{r:String(b.t-11)}]},up,b.a,null);
+  if(b.soft)return 'Мягкая рука, перебрать нельзя — добирай.';
+  const t=b.t,fake=t>=12?[{r:'10'},{r:String(t-10)}]:[{r:'2'},{r:String(Math.max(2,t-2))}];
+  return reason({kind:'h',cards:fake},up,b.a,null);
+}
+
+/* --- flow --- */
+function openGame(){
+  if(!GM.shoe.length||GM.pos>=GM.cut)gShuffle();
+  $('#game').classList.remove('hidden');GM.phase='bet';
+  if(GM.bank<GR.unit){GM.bet=0}else if(GM.bet>GM.bank)GM.bet=Math.floor(GM.bank/GR.unit)*GR.unit;
+  $('#g-dealer').innerHTML='';$('#g-dtot').textContent='';$('#g-msg').innerHTML='';
+  renderBetSpot();renderCtl();updTop();
+  if(GM.bank<GR.unit)msg('Банк пуст.<br><span style="font-size:16px;font-family:Manrope">Сбрось его в настройках игры</span>',0);
+}
+async function deal(){
+  if(GM.busy||GM.bet<GR.unit||GM.bet>GM.bank)return;GM.busy=true;
+  if(GM.pos>=GM.cut){gShuffle();msg('Перемешивание…',1000);await sleep(1100)}
+  store.set('lastBet',GM.bet);
+  GM.betTC=curTC();GM.betRC=GM.rc;GM.betDecks=decksLeft();GM.dec=[];GM.ins=0;GM.insDec=null;
+  GM.bank-=GM.bet;GM.hands=[{cards:[],bet:GM.bet}];GM.dealer=[];GM.act=0;GM.phase='deal';
+  $('#g-dealer').innerHTML='';$('#g-dtot').textContent='';$('#g-msg').innerHTML='';
+  renderHands();renderCtl();updTop();
+  const H=GM.hands[0],hc=()=>H.el.querySelector('.ghand'),D=$('#g-dealer');
+  let c=draw();H.cards.push(c);await dealTo(hc(),c);seen(c);updHand(0);
+  c=draw();GM.dealer.push(c);await dealTo(D,c);seen(c);updDealer(false);
+  c=draw();H.cards.push(c);await dealTo(hc(),c);seen(c);updHand(0);
+  c=draw();GM.dealer.push(c);GM.holeEl=await dealTo(D,c,true);
+  const up=GM.dealer[0].r,upv=cv(up);
+  if(upv===11){
+    GM.phase='ins';renderCtl();
+    const take=await new Promise(r=>GM.insResolve=r);GM.insResolve=null;
+    const tc=curTC(),right=tc>=3;GM.insDec={take,right,tc};
+    if(take){GM.ins=H.bet/2;GM.bank-=GM.ins;updTop()}
+    if(take!==right&&S.ghint)toast(`<b>Страховка:</b> ${right?'бери':'не бери'} — выгодна только при истинном счёте ≥ +3 (сейчас ${fmt(tc)||'0'}).`);
+    GM.phase='deal';renderCtl();
+  }
+  const dbj=hv(GM.dealer).t===21,pbj=hv(H.cards).t===21;
+  if(upv>=10){
+    if(dbj){await reveal();if(GM.ins){GM.bank+=GM.ins*3;}msg('У дилера блэкджек',1400);H.res=pbj?['push','Пуш']:['lose','Проигрыш'];if(pbj)GM.bank+=H.bet;return endRound()}
+    else if(GM.ins){msg('Блэкджека нет',900);await sleep(700)}
+  }
+  if(pbj){msg('Блэкджек!',1400);H.res=['bj','3:2'];GM.bank+=H.bet*2.5;await reveal();return endRound()}
+  GM.phase='play';GM.busy=false;setActive();renderCtl();
+}
+async function reveal(){
+  const c=GM.dealer[1],el=GM.holeEl;if(!el||!el.classList.contains('back'))return;
+  try{await el.animate([{transform:'rotateY(0)'},{transform:'rotateY(90deg)'}],{duration:160}).finished}catch(e){}
+  const n=cardEl(c,false);el.replaceWith(n);try{n.animate([{transform:'rotateY(90deg)'},{transform:'rotateY(0)'}],{duration:160})}catch(e){}
+  GM.holeEl=n;seen(c);updDealer(true);await sleep(260);
+}
+async function act(a){
+  if(GM.busy||GM.phase!=='play')return;GM.busy=true;
+  const h=GM.hands[GM.act],up=cv(GM.dealer[0].r)===10?'10':GM.dealer[0].r,tc=curTC(),b=bestAct(h,up,tc);
+  const ok=a===b.a;GM.dec.push({desc:handDesc(h),up,a,best:b.a,ok,why:ok?'':gReason(h,up,b),dev:b.dev,tc});
+  if(!ok&&S.ghint)toast(`<b>Лучше: ${ACT[b.a]}.</b> ${gReason(h,up,b)}`);else if(ok)buzz(5);
+  const hc=h.el.querySelector('.ghand');
+  if(a==='H'){const c=draw();h.cards.push(c);await dealTo(hc,c);seen(c);updHand(GM.act);
+    const v=hv(h.cards).t;if(v>21){h.res=['lose','Перебор'];h.done=true;msg('Перебор',800);await sleep(500)}else if(v===21){h.done=true}}
+  else if(a==='S'){h.done=true}
+  else if(a==='D'){GM.bank-=h.bet;h.bet*=2;h.dbl=true;updHand(GM.act);updTop();const c=draw();h.cards.push(c);await dealTo(hc,c);seen(c);updHand(GM.act);
+    if(hv(h.cards).t>21){h.res=['lose','Перебор'];msg('Перебор',800);await sleep(500)}h.done=true}
+  else if(a==='P'){
+    GM.bank-=h.bet;const aces=cv(h.cards[0].r)===11;const nh={cards:[h.cards.pop()],bet:h.bet,sa:aces};h.sa=aces;h.split=nh.split=true;
+    GM.hands.splice(GM.act+1,0,nh);renderHands();updTop();
+    for(const hh of [h,nh]){const c=draw();hh.cards.push(c);await dealTo(hh.el.querySelector('.ghand'),c);seen(c);updHand(GM.hands.indexOf(hh));if(aces)hh.done=true;else if(hv(hh.cards).t===21)hh.done=true}
+  }
+  await nextHand();
+}
+async function nextHand(){
+  while(GM.act<GM.hands.length&&GM.hands[GM.act].done)GM.act++;
+  if(GM.act<GM.hands.length){setActive();GM.busy=false;renderCtl();return}
+  GM.phase='dealer';setActive();renderCtl();
+  await reveal();
+  const live=GM.hands.some(h=>!h.res);
+  if(live){while(hv(GM.dealer).t<17){const c=draw();GM.dealer.push(c);await dealTo($('#g-dealer'),c);seen(c);updDealer(true);await sleep(150)}}
+  const dt=hv(GM.dealer).t;if(dt>21)msg('Дилер перебрал',1200);
+  GM.hands.forEach(h=>{if(h.res)return;const pt=hv(h.cards).t;
+    if(dt>21||pt>dt){h.res=['win','Выигрыш'];GM.bank+=h.bet*2}else if(pt===dt){h.res=['push','Пуш'];GM.bank+=h.bet}else h.res=['lose','Проигрыш']});
+  endRound();
+}
+async function endRound(){
+  GM.phase='done';updDealer(true);renderHands();updTop();
+  const staked=GM.hands.reduce((s,h)=>s+h.bet,0)+GM.ins;
+  // net = bank change; compute via payouts
+  let back=0;GM.hands.forEach(h=>{if(h.res[0]==='win')back+=h.bet*2;else if(h.res[0]==='push')back+=h.bet;else if(h.res[0]==='bj')back+=h.bet*2.5});
+  if(GM.ins&&hv(GM.dealer).t===21&&GM.dealer.length===2)back+=GM.ins*3;
+  const net=back-staked;
+  GM.hands.forEach(h=>{if(!h.el)return;const f=document.createElement('div');f.className='float';const d=h.res[0]==='win'?h.bet:h.res[0]==='bj'?h.bet*1.5:h.res[0]==='push'?0:-h.bet;f.textContent=d>0?'+'+money(d):d<0?money(d):'±0';f.style.color=d>0?'var(--green)':d<0?'var(--red)':'#ddd';h.el.style.position='relative';f.style.top='-10px';h.el.appendChild(f)});
+  GS.hands++;GS.net+=net;GM.dec.forEach(d=>{GS.dec++;if(d.ok)GS.ok++});if(GM.insDec){GS.dec++;if(GM.insDec.take===GM.insDec.right)GS.ok++}
+  store.set('gStats',GS);store.set('bank',GM.bank);paintGameHero();
+  GM.rounds++;await sleep(900);
+  let quiz=null;
+  if(S.gquiz&&GM.rounds%5===0){quiz=await new Promise(r=>openOv('Проверка счёта','Какой сейчас бегущий счёт?',ans=>{closeOv();r({ans,real:GM.rc})}))}
+  showSummary(net,quiz);GM.busy=false;
+}
+function showSummary(net,quiz){
+  const up=GM.dealer[0].r;let h=`<div class="sum"><h4 style="color:${net>0?'var(--green)':net<0?'var(--red)':'var(--txt)'}">${net>0?'+':''}${money(net)}</h4>`;
+  if(GM.insDec)h+=`<div class="ln">${GM.insDec.take===GM.insDec.right?'<span class="ok">✓</span>':'<span class="bad">✗</span>'} Страховка: ${GM.insDec.take?'взял':'не взял'}. <span class="muted">Брать только при истинном ≥ +3 (было ${fmt(GM.insDec.tc)||'0'}).</span></div>`;
+  if(GM.dec.length)GM.dec.forEach(d=>{h+=`<div class="ln">${d.ok?'<span class="ok">✓</span>':'<span class="bad">✗</span>'} <b>${d.desc}</b> против ${d.up}: ${ACT[d.a]}${d.ok?(d.dev?' <span class="muted">(отклонение по счёту)</span>':''):` → надо <b>${ACT[d.best]}</b>. <span class="muted">${d.why}</span>`}</div>`});
+  else if(!GM.insDec)h+=`<div class="ln muted">Решений не было — раздача решилась сразу.</div>`;
+  const rec=Math.max(1,GM.betTC-1)*GR.unit,bet=GM.bet;
+  const betOk=bet>=rec/2&&bet<=Math.max(rec*2,GR.unit*2)&&!(GM.betTC<=1&&bet>GR.unit*2);
+  h+=`<div class="ln">${betOk?'<span class="ok">✓</span>':'<span class="bad">✗</span>'} Ставка ${money(bet)} при истинном ${fmt(GM.betTC)||'0'}. <span class="muted">По счёту: ${money(rec)}${GM.betTC<=1?' (минималка, колода не за тебя)':''}.</span></div>`;
+  if(quiz)h+=`<div class="ln">${quiz.ans===quiz.real?'<span class="ok">✓ Счёт верный</span>':`<span class="bad">✗ Счёт: ты ${fmt(quiz.ans)||'0'}, было ${fmt(quiz.real)||'0'}</span>`}</div>`;
+  h+=`<div class="ln muted">Бегущий ${fmt(GM.rc)||'0'} · истинный ${fmt(curTC())||'0'} · осталось ${decksLeft().toFixed(1).replace('.',',')} кол.</div>`;
+  h+=`<button class="cta" id="g-next">Следующая раздача</button></div>`;
+  $('#g-ctl').innerHTML=h;$('#g-next').addEventListener('click',nextRound);
+}
+function nextRound(){
+  GM.phase='bet';if(GM.bet>GM.bank)GM.bet=Math.floor(GM.bank/GR.unit)*GR.unit;
+  const D=$('#g-dealer');[...D.children].forEach(el=>{try{el.animate([{opacity:1},{opacity:0,transform:'translateY(-30px)'}],{duration:200,fill:'forwards'})}catch(e){}});
+  setTimeout(()=>{D.innerHTML='';$('#g-dtot').textContent='';$('#g-msg').innerHTML='';renderBetSpot();renderCtl()},200);
+  if(GM.pos>=GM.cut){gShuffle();msg('Перемешивание…',1000);updTop()}
+  if(GM.bank<GR.unit)msg('Банк пуст.<br><span style="font-size:16px;font-family:Manrope">Сбрось его в настройках игры</span>',0);
+}
+$('#gstart').addEventListener('click',openGame);
+$('#g-close').addEventListener('click',()=>{if(GM.phase!=='bet'&&GM.phase!=='done'&&GM.phase!=='idle'&&GM.busy)return;
+  if(['play','ins'].includes(GM.phase)){/* forfeit nothing: refund active round bets */GM.hands.forEach(h=>GM.bank+=h.bet);GM.bank+=GM.ins;store.set('bank',GM.bank)}
+  GM.phase='idle';GM.busy=false;$('#game').classList.add('hidden');closeOv();paintGameHero()});
+$('#g-reset').addEventListener('click',()=>{GM.bank=1000;GM.bet=10;GS={hands:0,dec:0,ok:0,net:0};store.set('bank',1000);store.set('gStats',GS);store.set('lastBet',10);paintGameHero()});
+
+go(store.get('view','game'));
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
