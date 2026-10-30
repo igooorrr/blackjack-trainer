@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Тренажёр подсчёта карт Hi-Lo</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hi-Lo">
+<meta name="theme-color" content="#0c3527">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--felt:#0c3527;--felt2:#155c43;--gold:#e8c46a;--txt:#f3efe3;--muted:#a3bdb0;--red:#c8323c;--ok:#4cd187;--bad:#ff6b6b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(ellipse at 50% 15%,var(--felt2),var(--felt) 70%) fixed;color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);touch-action:manipulation}
+button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 24px;min-height:100vh;display:flex;flex-direction:column}
+h1{font-size:22px;margin:6px 0 2px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+.tabs{display:flex;gap:6px;background:rgba(0,0,0,.28);padding:4px;border-radius:12px;margin-bottom:14px}
+.tab{flex:1;background:transparent;padding:10px 6px;border-radius:9px;color:var(--muted);font-weight:600;font-size:15px}
+.tab.on{background:var(--gold);color:#1b1b1b}
+.box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:13px;margin-bottom:11px}
+.lbl{font-size:12px;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.7px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:rgba(255,255,255,.08);padding:9px 10px;border-radius:9px;font-size:15px;flex:1 0 auto}
+.seg button.on{background:var(--txt);color:#123;font-weight:600}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
+.toggle small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.sw{width:50px;height:30px;border-radius:15px;background:rgba(255,255,255,.18);position:relative;flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--ok)}.sw.on::after{left:23px}
+.big-btn{background:var(--gold);color:#1b1b1b;font-weight:700;font-size:18px;padding:15px;border-radius:14px;width:100%}
+.ghost{background:rgba(255,255,255,.1);padding:11px 14px;border-radius:12px;font-weight:600}
+.cheat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;font-size:13px}
+.cheat div{background:rgba(0,0,0,.25);border-radius:9px;padding:8px 4px;color:var(--muted)}
+.cheat b{display:block;font-size:20px;color:var(--txt)}
+.stat-line{color:var(--muted);font-size:13px;text-align:center;margin-top:10px}
+.hidden{display:none!important}
+
+/* play */
+#play:not(.hidden){flex:1;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bar .info{flex:1;font-variant-numeric:tabular-nums;font-size:15px;color:var(--muted)}
+.bar .info b{color:var(--txt)}
+.prog{height:4px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
+.table{flex:1;min-height:52vh;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;user-select:none;-webkit-user-select:none;border-radius:18px}
+.table.manual{cursor:pointer}
+.hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;color:var(--muted);font-size:13px}
+.cd{font-size:90px;font-weight:800;color:var(--gold)}
+.pc{--w:150px;width:var(--w);aspect-ratio:5/7;background:#fdfdfb;border-radius:calc(var(--w)*.08);color:#151515;position:relative;box-shadow:0 6px 18px rgba(0,0,0,.35);font-weight:700;animation:flip .16s ease-out}
+.pc.r{color:var(--red)}
+.pc .c{position:absolute;top:6%;left:8%;font-size:calc(var(--w)*.2);line-height:.95;text-align:center}
+.pc .c2{top:auto;left:auto;bottom:6%;right:8%;transform:rotate(180deg)}
+.pc .m{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--w)*.46)}
+@keyframes flip{from{transform:rotateY(70deg) scale(.92);opacity:.3}to{transform:none;opacity:1}}
+.vbtns{display:flex;gap:10px;margin-top:10px;padding-bottom:6px}
+.vbtns button{flex:1;padding:20px 0;border-radius:16px;font-size:26px;font-weight:800;background:rgba(255,255,255,.1)}
+.vbtns button:active{transform:scale(.96)}
+.vbtns .m1{background:rgba(255,107,107,.18);color:#ffb3b3}
+.vbtns .p1{background:rgba(76,209,135,.18);color:#a6f0c6}
+.pc.good{box-shadow:0 0 0 4px var(--ok),0 6px 18px rgba(0,0,0,.35)}
+.pc.wrong{box-shadow:0 0 0 4px var(--bad),0 6px 18px rgba(0,0,0,.35)}
+.pc .badge{position:absolute;top:-14px;right:-14px;background:var(--bad);color:#fff;border-radius:20px;padding:4px 10px;font-size:18px}
+.paused{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;border-radius:18px;font-size:20px;font-weight:600}
+
+/* overlay + keypad */
+.ov{position:fixed;inset:0;background:rgba(5,20,14,.82);display:flex;align-items:flex-end;justify-content:center;z-index:10;backdrop-filter:blur(3px)}
+.ov-in{width:100%;max-width:460px;background:#123e2f;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1)}
+@media(min-height:700px) and (min-width:600px){.ov{align-items:center}.ov-in{border-radius:20px}}
+.ov h2{margin:0 0 4px;font-size:19px;text-align:center}
+.ov p{margin:0 0 10px;text-align:center;color:var(--muted);font-size:14px}
+.kp-disp{font-size:46px;font-weight:800;text-align:center;padding:6px;margin-bottom:10px;background:rgba(0,0,0,.25);border-radius:12px;font-variant-numeric:tabular-nums;min-height:70px}
+.kp-disp.empty{color:rgba(255,255,255,.25)}
+.kp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.kp-grid button{background:rgba(255,255,255,.1);font-size:24px;font-weight:600;padding:13px 0;border-radius:12px}
+.kp-grid button:active{background:rgba(255,255,255,.25)}
+.kp-grid .sign{color:var(--gold)}
+.fb{font-size:20px;font-weight:700;text-align:center;padding:14px 0}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+
+/* result */
+.res-top{text-align:center;padding:10px 0 6px}
+.res-top .ic{font-size:60px;line-height:1}
+.res-top h2{margin:6px 0 2px;font-size:24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kv{background:rgba(0,0,0,.25);border-radius:11px;padding:10px}
+.kv span{display:block;color:var(--muted);font-size:12px}
+.kv b{font-size:20px;font-variant-numeric:tabular-nums}
+.list{font-size:14px;line-height:1.6;color:var(--muted)}
+.list .ok{color:var(--ok)}.list .bad{color:var(--bad)}
+.row{display:flex;gap:8px;margin-top:6px}
+.row>*{flex:1}
+
+/* true count */
+.tc-wrap{display:flex;gap:14px;align-items:stretch}
+.tc-left{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.rc-big{font-size:54px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.tray{width:74px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tray-box{width:64px;height:170px;border:2px solid rgba(255,255,255,.35);border-top:0;border-radius:0 0 8px 8px;position:relative;background:rgba(0,0,0,.25);overflow:hidden}
+.tray-fill{position:absolute;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,#e9e3d3 0 2px,#bfb7a2 2px 3px);transition:height .3s}
+.tray-mark{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.35)}
+.tray small{color:var(--muted);font-size:11px;text-align:center}
+.streak{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:6px}
+.explain{font-size:15px;line-height:1.5;text-align:center;min-height:46px;margin:4px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- MENU -->
+<section id="menu">
+  <h1>Тренажёр Hi-Lo</h1>
+  <p class="sub">2–6 = +1 · 7–9 = 0 · 10–A = −1</p>
+  <div class="tabs">
+    <button class="tab on" data-tab="tap">Тыкалка</button>
+    <button class="tab" data-tab="run">Бегущий счёт</button>
+    <button class="tab" data-tab="tc">Истинный счёт</button>
+  </div>
+
+  <div id="tab-tap">
+    <div class="box"><div class="list">Просто жми <b style="color:var(--txt)">−1 / 0 / +1</b> на каждую карту. Ничего вписывать не надо, в конце покажу точность.</div></div>
+    <div class="box"><p class="lbl">Сколько карт</p>
+      <div class="seg" data-set="tn">
+        <button data-v="20">20</button><button data-v="52">Колода</button><button data-v="104">2 колоды</button><button data-v="312">6 колод</button>
+      </div></div>
+    <div class="box"><p class="lbl">Скорость</p>
+      <div class="seg" data-set="tspeed">
+        <button data-v="0">Без таймера</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45с</button>
+      </div></div>
+    <div class="box toggle" id="tg-live"><div>Показывать счёт на экране<small>Видишь, как копится бегущий счёт. Выключи, когда освоишься</small></div><div class="sw"></div></div>
+    <button class="big-btn" id="tstart">Погнали</button>
+  </div>
+
+  <div id="tab-run" class="hidden">
+    <div class="box"><p class="lbl">Сколько карт</p>
+      <div class="seg" data-set="n">
+        <button data-v="20">20</button><button data-v="51">Колода</button><button data-v="103">2 колоды</button><button data-v="234">Шуз 6×</button>
+      </div></div>
+    <div class="box"><p class="lbl">Карт за раз</p>
+      <div class="seg" data-set="per"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button></div></div>
+    <div class="box"><p class="lbl">Скорость</p>
+      <div class="seg" data-set="speed">
+        <button data-v="0">Тапом</button><button data-v="1500">1.5с</button><button data-v="1000">1с</button><button data-v="700">0.7с</button><button data-v="450">0.45с</button><button data-v="300">0.3с</button>
+      </div></div>
+    <div class="box toggle" id="tg-checks"><div>Внезапные проверки<small>Время от времени спрашивает счёт по ходу</small></div><div class="sw"></div></div>
+    <button class="big-btn" id="start">Погнали</button>
+    <div class="stat-line" id="stat-run"></div>
+    <div class="box" style="margin-top:12px"><p class="lbl">Подсказки</p>
+      <div class="list">• «Колода» — 51 карта, одна остаётся закрытой. В конце угадай по счёту, крупная она или мелкая.<br>
+      • Маленькая карта + крупная = 0. Считай парами, будет быстрее.<br>
+      • Цель: колода тапом меньше чем за 25 секунд без ошибок, потом 2–3 карты за раз на 0.7с.</div></div>
+  </div>
+
+  <div id="tab-tc" class="hidden">
+    <div class="box">
+      <div class="tc-wrap">
+        <div class="tc-left">
+          <div><p class="lbl" style="margin:0">Бегущий счёт</p><div class="rc-big" id="tc-rc">+0</div></div>
+          <div><p class="lbl" style="margin:0">Осталось колод</p><div style="font-size:26px;font-weight:700" id="tc-d">3</div></div>
+        </div>
+        <div class="tray"><div class="tray-box" id="tray"><div class="tray-fill" id="tray-fill"></div></div><small>сброс<br>(шуз 6 колод)</small></div>
+      </div>
+    </div>
+    <div class="explain" id="tc-exp">Дели бегущий счёт на оставшиеся колоды и округляй вниз (к нулю).</div>
+    <div id="tc-kp"></div>
+    <div class="streak"><span id="tc-streak">Серия: 0</span><span id="tc-acc">Точность: —</span></div>
+    <div class="box toggle" id="tg-hard" style="margin-top:10px"><div>Хард: без числа колод<small>Колоды оцениваешь сам по сбросу, как в казино</small></div><div class="sw"></div></div>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="hidden">
+  <div class="bar">
+    <div class="info"><b id="p-pos">0</b>/<span id="p-len">0</span> · <span id="p-time">0.0</span>с</div>
+    <div id="p-live" class="hidden" style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin-right:4px">0</div>
+    <button class="ghost" id="p-pause">Пауза</button>
+    <button class="ghost" id="p-stop">✕</button>
+  </div>
+  <div class="prog"><i id="p-prog"></i></div>
+  <div class="table" id="table"></div>
+  <div class="vbtns" id="vbtns"><button class="m1" data-val="-1">−1</button><button data-val="0">0</button><button class="p1" data-val="1">+1</button></div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="hidden">
+  <div class="res-top"><div class="ic" id="r-ic"></div><h2 id="r-title"></h2><p class="sub" id="r-sub" style="margin:0"></p></div>
+  <div class="grid2 box">
+    <div class="kv"><span>Твой ответ</span><b id="r-ans"></b></div>
+    <div class="kv"><span>Правильно</span><b id="r-real"></b></div>
+    <div class="kv"><span>Время</span><b id="r-time"></b></div>
+    <div class="kv"><span>Сек на карту</span><b id="r-spc"></b></div>
+  </div>
+  <div class="box hidden" id="r-extra"><div class="list" id="r-extra-txt"></div></div>
+  <div class="box hidden" id="r-cls"><p class="lbl">Значения карт (кнопки)</p><div class="list" id="r-cls-txt"></div></div>
+  <div class="box hidden" id="r-checks"><p class="lbl">Проверки по ходу</p><div class="list" id="r-checks-txt"></div></div>
+  <div class="row"><button class="ghost" id="r-menu">Меню</button><button class="big-btn" id="r-again">Ещё раз</button></div>
+</section>
+
+</div>
+
+<div class="ov hidden" id="ov"><div class="ov-in">
+  <h2 id="ov-title"></h2><p id="ov-sub"></p>
+  <div id="ov-fb" class="fb hidden"></div>
+  <div id="ov-kp"></div>
+  <div id="ov-extra"></div>
+</div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SUITS=['♠','♥','♦','♣'];
+const hl=r=>['2','3','4','5','6'].includes(r)?1:['7','8','9'].includes(r)?0:-1;
+const fmt=n=>(n>0?'+':n<0?'−':'')+Math.abs(n);
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const store={get(k,d){try{const v=localStorage.getItem('cc_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('cc_'+k,JSON.stringify(v))}catch(e){}}};
+
+let S=Object.assign({n:'51',per:'1',speed:'0',checks:false,hard:false,tn:'20',tspeed:'0',live:true},store.get('settings',{}));
+const saveS=()=>store.set('settings',S);
+
+/* ---------- keypad ---------- */
+let activeKP=null;
+function Keypad(el,onSubmit){
+  let v='';
+  el.innerHTML=`<div class="kp-disp empty">?</div><div class="kp-grid">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<button class="sign" data-k="±">±</button><button data-k="0">0</button><button data-k="⌫">⌫</button></div><button class="big-btn" data-k="ok">Ответить</button>`;
+  const disp=el.querySelector('.kp-disp');
+  const render=()=>{const e=v===''||v==='-';disp.textContent=v===''?'?':v.replace('-','−')+(v==='-'?'':'');disp.classList.toggle('empty',e)};
+  const kp={press(k){
+      if(k==='±')v=v.startsWith('-')?v.slice(1):'-'+v;
+      else if(k==='⌫')v=v.slice(0,-1);
+      else if(k==='ok'){if(v===''||v==='-')return;const n=parseInt(v,10);v='';render();onSubmit(n);return}
+      else if(v.replace('-','').length<3){if(v==='0')v='';if(v==='-0')v='-';v+=k}
+      render()},
+    reset(){v='';render()}};
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b)kp.press(b.dataset.k)});
+  return kp;
+}
+document.addEventListener('keydown',e=>{
+  if(activeKP){
+    if(/^[0-9]$/.test(e.key))activeKP.press(e.key);
+    else if(e.key==='-'||e.key==='+')activeKP.press('±');
+    else if(e.key==='Backspace')activeKP.press('⌫');
+    else if(e.key==='Enter'){e.preventDefault();activeKP.press('ok')}
+    return;
+  }
+  if(G&&G.state==='run'&&G.per===1&&['ArrowLeft','ArrowDown','ArrowRight'].includes(e.key)){e.preventDefault();vpress({ArrowLeft:-1,ArrowDown:0,ArrowRight:1}[e.key]);return}
+  if((e.key===' '||e.key==='ArrowRight')&&G&&G.state==='run'&&G.manual){e.preventDefault();step()}
+});
+
+/* ---------- menu ---------- */
+function show(id){['menu','play','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+document.querySelectorAll('[data-set]').forEach(seg=>{
+  const key=seg.dataset.set;
+  const paint=()=>seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S[key]));
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[key]=b.dataset.v;saveS();paint()});
+  paint();
+});
+function toggleEl(id,key,cb){const el=$(id),sw=el.querySelector('.sw');const p=()=>sw.classList.toggle('on',!!S[key]);el.addEventListener('click',()=>{S[key]=!S[key];saveS();p();cb&&cb()});p()}
+toggleEl('#tg-checks','checks');
+toggleEl('#tg-live','live');
+toggleEl('#tg-hard','hard',()=>newTC());
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  const tb=t.dataset.tab,tc=tb==='tc';['tap','run','tc'].forEach(x=>$('#tab-'+x).classList.toggle('hidden',x!==tb));
+  activeKP=tc?tcKP:null;
+}));
+function paintStats(){
+  const st=store.get('stats',{runs:0,ok:0});
+  const best=store.get('best51',null);
+  let s=st.runs?`Прогонов: ${st.runs} · верно: ${Math.round(st.ok/st.runs*100)}%`:'';
+  if(best)s+=(s?' · ':'')+`рекорд колоды тапом: ${best.toFixed(1)}с`;
+  $('#stat-run').textContent=s;
+}
+paintStats();
+
+/* ---------- running count game ---------- */
+let G=null;
+function buildShoe(n){
+  const decks=Math.ceil((n+1)/52);let a=[];
+  for(let d=0;d<decks;d++)for(const s of SUITS)for(const r of RANKS)a.push({r,s});
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return {cards:a.slice(0,n),rest:a.slice(n),decks};
+}
+function cardHTML(c,w){
+  const red=c.s==='♥'||c.s==='♦';
+  return `<div class="pc${red?' r':''}" style="--w:${w}"><div class="c">${c.r}<br>${c.s}</div><div class="m">${c.s}</div><div class="c c2">${c.r}<br>${c.s}</div></div>`;
+}
+const cardW=per=>({1:'min(48vw,210px)',2:'min(40vw,170px)',3:'min(28vw,140px)',4:'min(21vw,115px)'}[per]);
+
+function startGame(tap){
+  tap=tap===true;
+  const n=tap?+S.tn:+S.n,sh=buildShoe(n),sp=tap?S.tspeed:S.speed;
+  G={tap,live:tap&&S.live,n,per:tap?1:+S.per,speed:+sp,manual:sp==='0',checks:tap?false:S.checks,shoe:sh.cards,rest:sh.rest,decks:sh.decks,
+     pos:0,rc:0,answered:true,used:false,cls:{ok:0,bad:0,miss:0},state:'count',paused:0,t0:0,pauseStart:0,timer:null,log:[],nextCheck:rand(10,22)};
+  $('#p-len').textContent=n;$('#p-pos').textContent=0;$('#p-time').textContent='0.0';$('#p-prog').style.width='0';
+  $('#p-pause').textContent='Пауза';$('#p-live').classList.toggle('hidden',!G.live);$('#p-live').textContent='0';
+  const tb=$('#table');tb.classList.toggle('manual',G.manual);$('#vbtns').classList.toggle('hidden',G.per!==1);
+  show('play');
+  let c=3;tb.innerHTML=`<div class="cd">${c}</div>`;
+  const tick=()=>{c--;if(!G||G.state!=='count')return;if(c>0){tb.innerHTML=`<div class="cd">${c}</div>`;G.timer=setTimeout(tick,600)}else{G.state='run';G.t0=performance.now();G.clock=setInterval(updTime,100);step()}};
+  G.timer=setTimeout(tick,600);
+}
+function elapsed(){return(performance.now()-G.t0-G.paused)/1000}
+function updTime(){if(G&&G.state==='run')$('#p-time').textContent=elapsed().toFixed(1)}
+function step(){
+  if(!G||G.state!=='run')return;
+  clearTimeout(G.timer);
+  if(G.pos>=G.n)return finish();
+  if(G.checks&&G.pos>=G.nextCheck&&G.n-G.pos>4)return askCheck();
+  if(G.per===1&&G.used&&!G.answered)G.cls.miss++;
+  G.answered=false;
+  const grp=G.shoe.slice(G.pos,G.pos+G.per);
+  G.pos+=grp.length;grp.forEach(c=>G.rc+=hl(c.r));
+  const w=cardW(G.per);
+  $('#table').innerHTML=grp.map(c=>cardHTML(c,w)).join('')+(G.manual&&G.pos<=G.per*2?'<div class="hint">жми значение карты или тапай по столу</div>':'');
+  $('#p-pos').textContent=G.pos;$('#p-prog').style.width=(G.pos/G.n*100)+'%';
+  if(!G.manual)G.timer=setTimeout(step,G.speed);
+}
+function vpress(v){
+  if(!G||G.state!=='run'||G.per!==1||G.pos===0)return;
+  if(G.answered){if(G.manual)step();return}
+  G.used=true;G.answered=true;
+  const c=G.shoe[G.pos-1],real=hl(c.r),el=$('#table .pc');
+  if(G.live)$('#p-live').textContent=fmt(G.rc);
+  if(v===real){G.cls.ok++;el&&el.classList.add('good');if(G.manual)return step()}
+  else{G.cls.bad++;if(el){el.classList.add('wrong');el.insertAdjacentHTML('beforeend',`<div class="badge">${fmt(real)}</div>`)}
+    if(G.manual){G.state='hold';clearTimeout(G.timer);setTimeout(()=>{if(G&&G.state==='hold'){G.state='run';step()}},700)}}
+}
+document.querySelectorAll('#vbtns button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();vpress(+b.dataset.val)}));
+$('#table').addEventListener('click',()=>{if(G&&G.state==='run'&&G.manual)step();else if(G&&G.state==='paused')togglePause()});
+function togglePause(){
+  if(!G)return;
+  if(G.state==='run'){G.state='paused';clearTimeout(G.timer);G.pauseStart=performance.now();$('#p-pause').textContent='Дальше';
+    $('#table').insertAdjacentHTML('beforeend','<div class="paused">Пауза · тапни, чтобы продолжить</div>')}
+  else if(G.state==='paused'){G.paused+=performance.now()-G.pauseStart;G.state='run';$('#p-pause').textContent='Пауза';
+    const p=$('#table .paused');p&&p.remove();if(!G.manual)G.timer=setTimeout(step,G.speed)}
+}
+$('#p-pause').addEventListener('click',togglePause);
+$('#p-stop').addEventListener('click',()=>{if(G){clearTimeout(G.timer);clearInterval(G.clock)}G=null;closeOv();show('menu')});
+
+/* overlay */
+let ovCb=null;
+const ovKP=Keypad($('#ov-kp'),n=>ovCb&&ovCb(n));
+function openOv(title,sub,cb){$('#ov-title').textContent=title;$('#ov-sub').textContent=sub;$('#ov-fb').classList.add('hidden');$('#ov-kp').classList.remove('hidden');$('#ov-extra').innerHTML='';ovKP.reset();ovCb=cb;$('#ov').classList.remove('hidden');activeKP=ovKP}
+function closeOv(){$('#ov').classList.add('hidden');activeKP=null;ovCb=null}
+
+function askCheck(){
+  G.state='ask';G.pauseStart=performance.now();
+  openOv('Проверка!','Какой сейчас бегущий счёт?',ans=>{
+    const ok=ans===G.rc;G.log.push({at:G.pos,ans,real:G.rc,ok});
+    const fb=$('#ov-fb');fb.className='fb '+(ok?'ok':'bad');fb.textContent=ok?'✓ Верно, '+fmt(G.rc):'✗ Было '+fmt(G.rc)+' — продолжаем с него';
+    $('#ov-kp').classList.add('hidden');ovCb=null;activeKP=null;
+    setTimeout(()=>{closeOv();if(!G)return;G.paused+=performance.now()-G.pauseStart;G.nextCheck=G.pos+rand(10,22);G.state='run';step()},ok?700:1500);
+  });
+}
+function finish(){
+  if(G.per===1&&G.used&&!G.answered){G.cls.miss++;G.answered=true}
+  G.state='ask';clearInterval(G.clock);const t=elapsed();
+  if(G.tap)return showTapResult(t);
+  openOv('Финиш','Итоговый бегущий счёт?',ans=>{closeOv();showResult(ans,t)});
+}
+function showTapResult(t){
+  const k=G.cls,tot=k.ok+k.bad+k.miss,acc=tot?Math.round(k.ok/tot*100):0;
+  $('#r-ic').textContent=acc===100?'🔥':acc>=90?'✅':acc>=75?'👌':'❌';
+  $('#r-title').textContent='Точность '+acc+'%';
+  $('#r-sub').textContent=acc===100?(G.manual?'Чисто. Попробуй с таймером или выключи счёт на экране.':(G.live?'Чисто. Выключи счёт на экране.':'Чисто. Пора в «Бегущий счёт».')):acc>=90?'Почти. Ещё пару заходов на этой скорости.':'Сбавь скорость, сначала нужна точность.';
+  $('#r-ans').previousElementSibling.textContent='Верно';$('#r-ans').textContent=k.ok+' / '+tot;
+  $('#r-real').previousElementSibling.textContent='Ошибок / пропусков';$('#r-real').textContent=k.bad+' / '+k.miss;
+  $('#r-time').textContent=t.toFixed(1)+'с';$('#r-spc').textContent=(t/G.n).toFixed(2);
+  $('#r-extra').classList.remove('hidden');$('#r-extra-txt').innerHTML='Итоговый бегущий счёт был <b style="color:var(--txt)">'+fmt(G.rc)+'</b>.';
+  $('#r-cls').classList.add('hidden');$('#r-checks').classList.add('hidden');
+  show('result');
+}
+function showResult(ans,t){
+  $('#r-ans').previousElementSibling.textContent='Твой ответ';$('#r-real').previousElementSibling.textContent='Правильно';
+  const ok=ans===G.rc;
+  const st=store.get('stats',{runs:0,ok:0});st.runs++;if(ok)st.ok++;store.set('stats',st);
+  let rec=false;
+  if(ok&&G.manual&&G.n===51&&G.per===1){const b=store.get('best51',null);if(b==null||t<b){store.set('best51',t);rec=b!=null||true}}
+  $('#r-ic').textContent=ok?'✅':'❌';
+  $('#r-title').textContent=ok?(rec?'Верно — новый рекорд!':'Верно'):'Мимо';
+  $('#r-sub').textContent=ok?(G.manual?(t/G.n<0.5?'Быстро. Пора на 2–3 карты за раз.':'Теперь то же самое, но быстрее.'):'Попробуй скорость выше или больше карт за раз.'):'Ошибся на '+Math.abs(ans-G.rc)+'. Сбавь темп и считай парами.';
+  $('#r-ans').textContent=fmt(ans);$('#r-real').textContent=fmt(G.rc);
+  $('#r-time').textContent=t.toFixed(1)+'с';$('#r-spc').textContent=(t/G.n).toFixed(2);
+  // extra
+  let ex='';
+  const remCards=G.rest.length;
+  if(remCards===1){const c=G.rest[0];const v=hl(c.r);
+    ex=`Закрытая карта: <b style="color:var(--txt)">${c.r}${c.s}</b> (${fmt(v)}). Полная колода в сумме даёт 0, поэтому по счёту ${fmt(G.rc)} её можно вычислить: ${G.rc>0?'плюс значит, что осталась крупная':G.rc<0?'минус значит, что осталась мелкая':'ноль значит 7, 8 или 9'}.`}
+  else if(remCards>1){const d=remCards/52;const tc=Math.trunc(G.rc/d);
+    ex=`В шузе осталось ${d.toFixed(1).replace('.',',')} колоды → истинный счёт ${fmt(G.rc)} / ${d.toFixed(1).replace('.',',')} ≈ <b style="color:var(--txt)">${fmt(tc)}</b>. ${tc>=2?'Ставка: '+(tc-1)+' юнит(а).':'Ставь минималку.'}`}
+  $('#r-extra').classList.toggle('hidden',!ex);$('#r-extra-txt').innerHTML=ex;
+  const k=G.cls,tot=k.ok+k.bad+k.miss;$('#r-cls').classList.toggle('hidden',!tot);
+  $('#r-cls-txt').innerHTML=tot?`<span class="ok">✓ ${k.ok}</span> · <span class="bad">✗ ${k.bad}</span>${k.miss?` · пропущено ${k.miss}`:''} · точность ${Math.round(k.ok/tot*100)}%`:'';
+  const cl=G.log;$('#r-checks').classList.toggle('hidden',!cl.length);
+  $('#r-checks-txt').innerHTML=cl.length?`${cl.filter(x=>x.ok).length} из ${cl.length} верно<br>`+cl.map(x=>`<span class="${x.ok?'ok':'bad'}">${x.ok?'✓':'✗'}</span> карта ${x.at}: ты ${fmt(x.ans)}, было ${fmt(x.real)}`).join('<br>'):'';
+  paintStats();show('result');
+}
+$('#start').addEventListener('click',()=>startGame(false));
+$('#tstart').addEventListener('click',()=>startGame(true));
+$('#r-again').addEventListener('click',()=>startGame(!!(G&&G.tap)));
+$('#r-menu').addEventListener('click',()=>{G=null;show('menu')});
+
+/* ---------- true count drill ---------- */
+let T=null;const tcSt={n:0,ok:0,streak:0};
+const tcKP=Keypad($('#tc-kp'),ans=>checkTC(ans));
+// tray marks
+(()=>{const tr=$('#tray');for(let i=1;i<6;i++){const m=document.createElement('div');m.className='tray-mark';m.style.bottom=(i/6*100)+'%';tr.appendChild(m)}})();
+function newTC(){
+  const d=rand(1,11)/2; // 0.5..5.5 осталось
+  let rc=rand(-10,16);if(Math.random()<.25)rc=rand(2,9)*(Math.random()<.2?-1:1);
+  T={d,rc,done:false,id:Math.random()};
+  $('#tc-rc').textContent=fmt(rc);
+  $('#tc-d').textContent=S.hard?'?':String(d).replace('.',',');
+  $('#tray-fill').style.height=((6-d)/6*100)+'%';
+  $('#tc-exp').innerHTML='Дели бегущий счёт на оставшиеся колоды, округляй вниз (к нулю).';
+  tcKP.reset();
+}
+function accepted(rc,d){const s=new Set([Math.trunc(rc/d),Math.round(rc/d)]);return s}
+function checkTC(ans){
+  if(!T)return;
+  if(T.done){newTC();return}
+  const ds=S.hard?[T.d-.5,T.d,T.d+.5].filter(x=>x>0):[T.d];
+  const ok=ds.some(d=>accepted(T.rc,d).has(ans));
+  const tc=Math.trunc(T.rc/T.d),raw=(T.rc/T.d).toFixed(2).replace('.',',');
+  tcSt.n++;if(ok){tcSt.ok++;tcSt.streak++}else tcSt.streak=0;
+  const bet=tc>=2?`ставка ${tc-1} юнит(а)`:'ставка минимальная';
+  $('#tc-exp').innerHTML=`<span style="color:${ok?'var(--ok)':'var(--bad)'};font-weight:700">${ok?'✓ Верно':'✗ Неа'}</span> · ${fmt(T.rc)} / ${String(T.d).replace('.',',')} = ${raw} → <b>${fmt(tc)}</b><br><span style="color:var(--muted)">${S.hard?'было '+String(T.d).replace('.',',')+' колоды · ':''}${bet}${tc>=3?' · страховку брать':''}</span>`;
+  $('#tc-d').textContent=String(T.d).replace('.',',');
+  $('#tc-streak').textContent='Серия: '+tcSt.streak;$('#tc-acc').textContent='Точность: '+Math.round(tcSt.ok/tcSt.n*100)+'%';
+  T.done=true;const id=T.id;
+  setTimeout(()=>{if(T&&T.id===id)newTC()},ok?1300:2600);
+}
+newTC();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
